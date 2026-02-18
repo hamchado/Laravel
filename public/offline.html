@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>غير متصل بالإنترنت - تطبيق التعلم الذكي</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f4ff 0%, #f8fafc 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            color: #1f2937;
+        }
+        
+        .container {
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .offline-icon {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #4f46e5, #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            box-shadow: 0 10px 30px rgba(79, 70, 229, 0.2);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .offline-icon i {
+            font-size: 48px;
+            color: white;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: #1f2937;
+            font-weight: 700;
+        }
+        
+        p {
+            font-size: 16px;
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .features {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .feature {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-align: right;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .feature i {
+            width: 40px;
+            height: 40px;
+            background: #f3f4f6;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4f46e5;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .feature-text {
+            flex: 1;
+        }
+        
+        .feature-text h3 {
+            font-size: 14px;
+            margin-bottom: 4px;
+            color: #1f2937;
+            font-weight: 600;
+        }
+        
+        .feature-text p {
+            font-size: 12px;
+            margin: 0;
+            color: #6b7280;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #4f46e5;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #4338ca;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #4f46e5;
+            border: 2px solid #4f46e5;
+        }
+        
+        .btn-secondary:hover {
+            background: #f3f4f6;
+        }
+        
+        .connection-status {
+            margin-top: 30px;
+            padding: 10px;
+            background: #fef3c7;
+            border-radius: 8px;
+            border: 1px solid #fbbf24;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #92400e;
+        }
+        
+        .connection-status i {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        footer {
+            margin-top: 40px;
+            color: #9ca3af;
+            font-size: 12px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="offline-icon">
+            <i class="fas fa-wifi-slash"></i>
+        </div>
+        
+        <h1>أنت غير متصل بالإنترنت</h1>
+        <p>عذراً، يبدو أن اتصالك بالإنترنت قد انقطع. بعض الميزات قد لا تعمل بشكل صحيح.</p>
+        
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-home"></i>
+                <div class="feature-text">
+                    <h3>الصفحة الرئيسية</h3>
+                    <p>يمكنك الوصول إلى الصفحة الرئيسية المخزنة</p>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <i class="fas fa-book"></i>
+                <div class="feature-text">
+                    <h3>المحتوى المخزن</h3>
+                    <p>يمكنك تصفح المحتوى الذي قمت بزيارته سابقاً</p>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <i class="fas fa-cog"></i>
+                <div class="feature-text">
+                    <h3>الإعدادات</h3>
+                    <p>تغيير الإعدادات يعمل دون اتصال</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="connection-status" id="connectionStatus">
+            <i class="fas fa-sync-alt"></i>
+            <span>جاري محاولة إعادة الاتصال...</span>
+        </div>
+        
+        <div class="buttons">
+            <button class="btn btn-primary" onclick="window.location.href='/'">
+                <i class="fas fa-home" style="margin-left: 8px;"></i>
+                الصفحة الرئيسية
+            </button>
+            <button class="btn btn-secondary" onclick="tryReconnect()">
+                <i class="fas fa-redo" style="margin-left: 8px;"></i>
+                إعادة المحاولة
+            </button>
+        </div>
+        
+        <footer>
+            تطبيق التعلم الذكي - جميع الحقوق محفوظة © 2024
+        </footer>
+    </div>
+    
+    <script>
+        // التحقق من حالة الاتصال
+        function checkConnection() {
+            const statusEl = document.getElementById('connectionStatus');
+            
+            if (navigator.onLine) {
+                statusEl.innerHTML = `
+                    <i class="fas fa-check-circle"></i>
+                    <span style="color: #065f46;">تم استعادة الاتصال! سيتم إعادة التوجيه...</span>
+                `;
+                statusEl.style.background = '#d1fae5';
+                statusEl.style.borderColor = '#10b981';
+                statusEl.style.color = '#065f46';
+                
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 2000);
+            }
+        }
+        
+        function tryReconnect() {
+            const statusEl = document.getElementById('connectionStatus');
+            statusEl.innerHTML = `
+                <i class="fas fa-sync-alt fa-spin"></i>
+                <span>جاري إعادة الاتصال...</span>
+            `;
+            
+            setTimeout(checkConnection, 2000);
+        }
+        
+        // مراقبة تغييرات حالة الاتصال
+        window.addEventListener('online', checkConnection);
+        window.addEventListener('offline', () => {
+            const statusEl = document.getElementById('connectionStatus');
+            statusEl.innerHTML = `
+                <i class="fas fa-wifi-slash"></i>
+                <span>أنت غير متصل بالإنترنت</span>
+            `;
+            statusEl.style.background = '#fef3c7';
+            statusEl.style.borderColor = '#fbbf24';
+            statusEl.style.color = '#92400e';
+        });
+        
+        // التحقق الأولي
+        checkConnection();
+    </script>
+</body>
+</html>

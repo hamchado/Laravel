@@ -1,0 +1,761 @@
+================================================================================
+  MULTAQA PLATFORM - DATABASE SCHEMA & DATA
+  SQLite Database
+  Generated: 2026-02-14
+================================================================================
+
+
+================================================================================
+1. TABLE: roles
+   Purpose: User roles (student, admin, supervisor, ayham)
+================================================================================
+CREATE TABLE roles (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    name        VARCHAR NOT NULL UNIQUE,
+    label       VARCHAR NULL,
+    created_at  DATETIME NULL,
+    updated_at  DATETIME NULL
+);
+
+-- Current Data:
+-- id=1  name=student      label=طالب
+-- id=2  name=admin        label=مشرف إداري
+-- id=3  name=supervisor   label=مشرف سريري
+-- id=4  name=ayham        label=مدير النظام
+
+
+================================================================================
+2. TABLE: users
+   Purpose: All users (students, admins, supervisors, ayham)
+================================================================================
+CREATE TABLE users (
+    id                INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    student_id        VARCHAR NULL UNIQUE,        -- University ID or username
+    name              VARCHAR NOT NULL,
+    email             VARCHAR NULL UNIQUE,
+    role_id           INTEGER NOT NULL,            -- FK -> roles(id)
+    email_verified_at DATETIME NULL,
+    password          VARCHAR NOT NULL,            -- Hashed with bcrypt
+    is_active         TINYINT(1) NOT NULL DEFAULT 1,
+    remember_token    VARCHAR NULL,
+    phone             VARCHAR NULL,
+    created_at        DATETIME NULL,
+    updated_at        DATETIME NULL,
+    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
+);
+-- Indexes: UNIQUE(email), UNIQUE(student_id)
+
+-- Current Data:
+-- id=1  student_id=202312345   name=أيهم رياض حمشدو    role=student(1)     phone=0935123456  email=student@multaqa.com
+-- id=2  student_id=202398765   name=خالد العمر          role=student(1)     phone=0937654321  email=khaled@multaqa.com
+-- id=3  student_id=admin       name=المشرف الإداري      role=admin(2)       phone=0911111111  email=admin@multaqa.com
+-- id=4  student_id=supervisor  name=المشرف السريري      role=supervisor(3)  phone=0922222222  email=supervisor@multaqa.com
+-- id=5  student_id=ayham       name=أيهم - مدير النظام  role=ayham(4)       phone=0933333333  email=ayham@multaqa.com
+
+-- Passwords (before hashing):
+-- student:    Student@123
+-- khaled:     Student@123
+-- admin:      Admin@123
+-- supervisor: Super@123
+-- ayham:      Ayham@123
+
+
+================================================================================
+3. TABLE: courses
+   Purpose: Clinical courses offered in dental college
+================================================================================
+CREATE TABLE courses (
+    id               INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    code             VARCHAR NOT NULL,             -- Course code (A, B, C, D)
+    slug             VARCHAR NOT NULL UNIQUE,
+    name             VARCHAR NOT NULL,
+    supervisors      VARCHAR NULL,
+    schedule         VARCHAR NULL,
+    location         VARCHAR NULL,
+    max_reservations INTEGER NOT NULL DEFAULT 2,   -- Max patient reservations
+    session_limit    INTEGER NOT NULL DEFAULT 2,   -- Max cases per session
+    is_active        TINYINT(1) NOT NULL DEFAULT 1,
+    created_at       DATETIME NULL,
+    updated_at       DATETIME NULL
+);
+
+-- Current Data:
+-- id=1  code=A  name=مداواة الأسنان الترميمية 4   session_limit=2  max_res=2
+-- id=2  code=B  name=تخدير و قلع الأسنان 4        session_limit=3  max_res=3
+-- id=3  code=C  name=النسج حول سنية 2             session_limit=2  max_res=2
+-- id=4  code=D  name=مداواة الأسنان اللبية 4       session_limit=2  max_res=2
+
+
+================================================================================
+4. TABLE: course_schedules
+   Purpose: Weekly session schedule per course (when QR is allowed)
+================================================================================
+CREATE TABLE course_schedules (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    course_id   INTEGER NOT NULL,                -- FK -> courses(id)
+    group_name  VARCHAR NULL,                    -- Group name (if multiple groups)
+    day_of_week VARCHAR NOT NULL,                -- saturday, sunday, monday, etc.
+    start_time  TIME NOT NULL,                   -- e.g. 08:00
+    end_time    TIME NOT NULL,                   -- e.g. 12:00
+    location    VARCHAR NULL,                    -- Clinic location
+    created_at  DATETIME NULL,
+    updated_at  DATETIME NULL,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+);
+
+-- Current Data:
+-- id=1  course=1(A)  day=saturday   08:00-12:00  loc=عيادة الترميم 10
+-- id=2  course=2(B)  day=sunday     09:00-13:00  loc=عيادة الجراحة 7
+-- id=3  course=3(C)  day=tuesday    10:00-14:00  loc=عيادة اللثة 15
+-- id=4  course=4(D)  day=wednesday  08:00-11:00  loc=عيادة العلاج اللبي 3
+
+
+================================================================================
+5. TABLE: course_rules
+   Purpose: Business rules per course (session limits, grants, tooth duplication)
+================================================================================
+CREATE TABLE course_rules (
+    id                     INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    course_id              INTEGER NOT NULL UNIQUE,   -- FK -> courses(id)
+    max_cases_per_session  INTEGER NOT NULL DEFAULT 2,
+    allow_grants           TINYINT(1) NOT NULL DEFAULT 1,
+    grant_unlimited        TINYINT(1) NOT NULL DEFAULT 1,
+    prevent_duplicate_tooth TINYINT(1) NOT NULL DEFAULT 1,
+    notes                  TEXT NULL,
+    created_at             DATETIME NULL,
+    updated_at             DATETIME NULL,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+);
+
+-- Current Data:
+-- id=1  course=1(A)  max_session=2  grants=YES  unlimited=YES  dup_tooth=PREVENT
+-- id=2  course=2(B)  max_session=3  grants=YES  unlimited=YES  dup_tooth=PREVENT
+-- id=3  course=3(C)  max_session=2  grants=YES  unlimited=YES  dup_tooth=PREVENT
+-- id=4  course=4(D)  max_session=2  grants=YES  unlimited=YES  dup_tooth=PREVENT
+
+
+================================================================================
+6. TABLE: course_evaluation_stages
+   Purpose: Evaluation stages required per course (3 stages each)
+================================================================================
+CREATE TABLE course_evaluation_stages (
+    id                INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    course_id         INTEGER NOT NULL,             -- FK -> courses(id)
+    stage_number      INTEGER NOT NULL,             -- 1, 2, 3
+    stage_name        VARCHAR NOT NULL,
+    required_images   INTEGER NOT NULL DEFAULT 0,
+    requires_panorama TINYINT(1) NOT NULL DEFAULT 0,
+    description       TEXT NULL,
+    created_at        DATETIME NULL,
+    updated_at        DATETIME NULL,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    UNIQUE(course_id, stage_number)
+);
+
+-- Current Data:
+-- Course A (مداواة الأسنان الترميمية):
+--   stage=1  name=فحص أولي          images=1  panorama=NO
+--   stage=2  name=تنفيذ المعالجة     images=2  panorama=NO
+--   stage=3  name=متابعة نهائية      images=1  panorama=YES
+--
+-- Course B (تخدير و قلع الأسنان):
+--   stage=1  name=تشخيص وتخطيط      images=1  panorama=YES
+--   stage=2  name=تنفيذ القلع        images=2  panorama=NO
+--   stage=3  name=متابعة ما بعد القلع images=1  panorama=NO
+--
+-- Course C (النسج حول سنية):
+--   stage=1  name=فحص أولي          images=1  panorama=NO
+--   stage=2  name=العلاج            images=2  panorama=NO
+--   stage=3  name=تقييم نهائي       images=1  panorama=NO
+--
+-- Course D (مداواة الأسنان اللبية):
+--   stage=1  name=تشخيص وأشعة       images=1  panorama=YES
+--   stage=2  name=تنفيذ العلاج اللبي images=2  panorama=YES
+--   stage=3  name=حشو قناة نهائي    images=1  panorama=YES
+
+
+================================================================================
+7. TABLE: course_works
+   Purpose: Types of dental work/treatment per course with required counts
+================================================================================
+CREATE TABLE course_works (
+    id                INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    course_id         INTEGER NOT NULL,             -- FK -> courses(id)
+    name              VARCHAR NOT NULL,
+    required_count    INTEGER NOT NULL DEFAULT 0,   -- How many the student must complete
+    evaluation_stages INTEGER NOT NULL DEFAULT 3,
+    required_images   INTEGER NOT NULL DEFAULT 2,
+    requires_panorama TINYINT(1) NOT NULL DEFAULT 0,
+    description       TEXT NULL,
+    created_at        DATETIME NULL,
+    updated_at        DATETIME NULL,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+);
+
+-- Current Data (20 works total):
+-- Course A (مداواة الأسنان الترميمية 4):
+--   حشوة تجميلية (كومبوزيت)   required=10  stages=3  images=2
+--   تاج دائم (Crown)           required=8   stages=3  images=2
+--   جسر سنّي ثابت (Bridge)     required=6   stages=3  images=2
+--   ترميم ما بعد القلع          required=4   stages=2  images=1
+--   حشوة زجاجية (GIC)          required=12  stages=3  images=2
+--
+-- Course B (تخدير و قلع الأسنان 4):
+--   خلع سن عقل مدفون           required=8   stages=3  images=2
+--   خلع جراحي بسيط             required=10  stages=2  images=1
+--   خلع جراحي معقد             required=6   stages=3  images=2
+--   تخدير سطحي (Infiltration)  required=15  stages=2  images=1
+--   تخدير عظمي (Block)         required=10  stages=2  images=1
+--
+-- Course C (النسج حول سنية 2):
+--   تنظيف جيب عميق (Scaling)       required=15  stages=2  images=1
+--   جراحة إعادة تشكيل اللثة        required=8   stages=3  images=2
+--   زراعة أسنان (Implant)          required=6   stages=3  images=3
+--   تجميل لثة (Gingivoplasty)      required=8   stages=3  images=2
+--   كشط جذر (Root Planing)         required=12  stages=2  images=1
+--
+-- Course D (مداواة الأسنان اللبية 4):
+--   علاج عصب أولي (RCT)        required=10  stages=3  images=2
+--   علاج عصب ثانوي (Re-RCT)    required=6   stages=3  images=2
+--   حشو قناة (Obturation)      required=12  stages=3  images=2
+--   استئصال لب جزئي (Pulpotomy) required=8   stages=2  images=1
+--   علاج أسنان أطفال            required=10  stages=2  images=1
+
+
+================================================================================
+8. TABLE: course_student
+   Purpose: Many-to-many relation between courses and students
+================================================================================
+CREATE TABLE course_student (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    course_id   INTEGER NOT NULL,                -- FK -> courses(id)
+    user_id     INTEGER NOT NULL,                -- FK -> users(id)
+    group_name  VARCHAR NULL,                    -- Student's group within course
+    created_at  DATETIME NULL,
+    updated_at  DATETIME NULL,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE(course_id, user_id)
+);
+
+-- Current Data:
+-- user=1 (أيهم) enrolled in: courses 1,2,3,4 (all courses)
+-- user=2 (خالد) enrolled in: courses 1,2
+
+
+================================================================================
+9. TABLE: patients
+   Purpose: Patient records (dental patients)
+================================================================================
+CREATE TABLE patients (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    record_number   VARCHAR NOT NULL UNIQUE,      -- e.g. MED-2026-0001
+    full_name       VARCHAR NOT NULL,
+    phone           VARCHAR NULL,
+    birth_year      INTEGER NULL,
+    age             INTEGER NULL,
+    gender          VARCHAR NOT NULL DEFAULT 'male',    -- male / female
+    age_type        VARCHAR NOT NULL DEFAULT 'adult',   -- adult / child
+    access_type     VARCHAR NOT NULL DEFAULT 'private', -- private / public
+    governorate     VARCHAR NULL,
+    address         VARCHAR NULL,
+    notes           TEXT NULL,
+    parent_name     VARCHAR NULL,                 -- For children
+    parent_phone    VARCHAR NULL,                 -- For children
+    parent_birth_year INTEGER NULL,
+    added_by        INTEGER NOT NULL,             -- FK -> users(id)
+    created_at      DATETIME NULL,
+    updated_at      DATETIME NULL,
+    FOREIGN KEY (added_by) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Current Data:
+-- id=1  MED-2026-0001  أحمد محمد العلي   age=36  male    public
+-- id=2  MED-2026-0002  سارة خالد النجار   age=41  female  private
+-- id=3  MED-2026-0003  محمد علي حسن       age=31  male    public
+-- id=4  MED-2026-0004  فاطمة أحمد         age=8   female  private (child)
+-- id=5  MED-2026-0005  عمر خالد الدوسري   age=48  male    public
+-- id=6  MED-2026-0006  He                 age=7   male    private
+
+
+================================================================================
+10. TABLE: patient_teeth
+    Purpose: Individual tooth conditions per patient (FDI numbering)
+================================================================================
+CREATE TABLE patient_teeth (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    patient_id    INTEGER NOT NULL,               -- FK -> patients(id)
+    tooth_number  INTEGER NOT NULL,               -- FDI notation (11-48 adult, 51-85 child)
+    condition     VARCHAR NOT NULL,               -- healthy, decayed, missing, filled, etc.
+    sub_condition VARCHAR NULL,
+    label         VARCHAR NULL,
+    is_primary    TINYINT(1) NOT NULL DEFAULT 0,  -- Primary (baby) tooth
+    created_at    DATETIME NULL,
+    updated_at    DATETIME NULL,
+    FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE,
+    UNIQUE(patient_id, tooth_number)
+);
+
+-- 7 records currently
+
+
+================================================================================
+11. TABLE: patient_health
+    Purpose: Patient health conditions (diseases, diabetes, blood pressure)
+================================================================================
+CREATE TABLE patient_health (
+    id                  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    patient_id          INTEGER NOT NULL,          -- FK -> patients(id)
+    diseases            TEXT NULL,                  -- JSON array of diseases
+    diabetes_controlled TINYINT(1) NULL,
+    bp_controlled       TINYINT(1) NULL,
+    created_at          DATETIME NULL,
+    updated_at          DATETIME NULL,
+    FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE
+);
+
+-- 1 record currently
+
+
+================================================================================
+12. TABLE: patient_perio
+    Purpose: Periodontal assessment per patient segment
+================================================================================
+CREATE TABLE patient_perio (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    patient_id  INTEGER NOT NULL,                -- FK -> patients(id)
+    segment     VARCHAR NOT NULL,                -- Mouth segment
+    grade       VARCHAR NOT NULL,                -- Periodontal grade
+    pockets     TEXT NULL,                        -- JSON pocket depths
+    created_at  DATETIME NULL,
+    updated_at  DATETIME NULL,
+    FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE,
+    UNIQUE(patient_id, segment)
+);
+
+-- 1 record currently
+
+
+================================================================================
+13. TABLE: patient_access
+    Purpose: Which users have access to which private patients
+================================================================================
+CREATE TABLE patient_access (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    patient_id  INTEGER NOT NULL,                -- FK -> patients(id)
+    user_id     INTEGER NOT NULL,                -- FK -> users(id)
+    created_at  DATETIME NULL,
+    updated_at  DATETIME NULL,
+    FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE(patient_id, user_id)
+);
+
+-- 0 records currently
+
+
+================================================================================
+14. TABLE: reservations
+    Purpose: Patient reservation for clinical sessions
+================================================================================
+CREATE TABLE reservations (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    patient_id   INTEGER NOT NULL,               -- FK -> patients(id)
+    user_id      INTEGER NOT NULL,               -- FK -> users(id)
+    course_id    INTEGER NOT NULL,               -- FK -> courses(id)
+    status       VARCHAR NOT NULL DEFAULT 'temporary',  -- temporary / confirmed / cancelled
+    confirmed_at DATETIME NULL,
+    cancelled_at DATETIME NULL,
+    expires_at   DATETIME NULL,
+    created_at   DATETIME NULL,
+    updated_at   DATETIME NULL,
+    FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+);
+-- Index: (patient_id, user_id, course_id, status)
+
+-- Current Data:
+-- id=1  patient=1(أحمد)   user=1  course=1(A)  status=confirmed
+-- id=2  patient=2(سارة)   user=1  course=4(D)  status=confirmed
+-- id=3  patient=3(محمد)   user=1  course=1(A)  status=confirmed
+-- id=4  patient=5(عمر)    user=1  course=2(B)  status=confirmed
+-- id=5  patient=6(He)     user=1  course=4(D)  status=confirmed
+
+
+================================================================================
+15. TABLE: cases
+    Purpose: Clinical cases (dental treatments submitted by students)
+================================================================================
+CREATE TABLE cases (
+    id               INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    patient_id       INTEGER NOT NULL,            -- FK -> patients(id)
+    user_id          INTEGER NOT NULL,            -- FK -> users(id) (student)
+    course_id        INTEGER NOT NULL,            -- FK -> courses(id)
+    reservation_id   INTEGER NULL,                -- FK -> reservations(id)
+    tooth_number     INTEGER NULL,                -- FDI tooth number
+    treatment_type   VARCHAR NULL,                -- Type of treatment
+    treatment_label  VARCHAR NULL,                -- Display label
+    description      TEXT NULL,
+    status           VARCHAR NOT NULL DEFAULT 'pending',  -- pending / accepted / completed / rejected
+    supervisor_notes TEXT NULL,
+    evaluated_at     DATETIME NULL,               -- When fully evaluated
+    evaluated_by     INTEGER NULL,                -- FK -> users(id) (supervisor)
+    is_grant         TINYINT(1) NOT NULL DEFAULT 0,  -- Is this a granted (bonus) case
+    evaluation_count INTEGER NOT NULL DEFAULT 0,     -- How many stages evaluated
+    session_date     DATE NULL,                      -- Date of session
+    created_at       DATETIME NULL,
+    updated_at       DATETIME NULL,
+    FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    FOREIGN KEY (reservation_id) REFERENCES reservations(id) ON DELETE SET NULL,
+    FOREIGN KEY (evaluated_by) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Status Flow: pending -> accepted (first evaluation) -> completed (all evaluations done)
+--              pending -> rejected
+-- 0 records currently
+
+
+================================================================================
+16. TABLE: case_evaluations
+    Purpose: Per-stage evaluation of cases by supervisors
+================================================================================
+CREATE TABLE case_evaluations (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    case_id      INTEGER NOT NULL,               -- FK -> cases(id)
+    evaluator_id INTEGER NOT NULL,               -- FK -> users(id) (supervisor)
+    stage        INTEGER NOT NULL,               -- Stage number (1, 2, 3)
+    stage_name   VARCHAR NULL,
+    grade        VARCHAR NULL,                   -- Grade given (e.g. A, B, C)
+    notes        TEXT NULL,
+    evaluated_at DATETIME NULL,
+    created_at   DATETIME NULL,
+    updated_at   DATETIME NULL,
+    FOREIGN KEY (case_id) REFERENCES cases(id) ON DELETE CASCADE,
+    FOREIGN KEY (evaluator_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE(case_id, stage)
+);
+
+-- 0 records currently
+
+
+================================================================================
+17. TABLE: case_grants
+    Purpose: Grant system - students can give extra cases to other students
+================================================================================
+CREATE TABLE case_grants (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    case_id      INTEGER NOT NULL,               -- FK -> cases(id)
+    granter_id   INTEGER NOT NULL,               -- FK -> users(id) (who gives)
+    grantee_id   INTEGER NOT NULL,               -- FK -> users(id) (who receives)
+    course_id    INTEGER NOT NULL,               -- FK -> courses(id)
+    status       VARCHAR NOT NULL DEFAULT 'pending',  -- pending / accepted / rejected / cancelled
+    cancel_reason TEXT NULL,
+    responded_at DATETIME NULL,
+    created_at   DATETIME NULL,
+    updated_at   DATETIME NULL,
+    FOREIGN KEY (case_id) REFERENCES cases(id) ON DELETE CASCADE,
+    FOREIGN KEY (granter_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (grantee_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+);
+
+-- 0 records currently
+
+
+================================================================================
+18. TABLE: case_images
+    Purpose: Images attached to cases (before, after, xray)
+================================================================================
+CREATE TABLE case_images (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    case_id    INTEGER NOT NULL,                 -- FK -> cases(id)
+    path       VARCHAR NOT NULL,                 -- Storage path
+    type       VARCHAR NULL,                     -- before / after / xray
+    created_at DATETIME NULL,
+    updated_at DATETIME NULL,
+    FOREIGN KEY (case_id) REFERENCES cases(id) ON DELETE CASCADE
+);
+
+-- 0 records currently
+
+
+================================================================================
+19. TABLE: panorama_images
+    Purpose: Panoramic X-ray images linked to patients
+================================================================================
+CREATE TABLE panorama_images (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    patient_id  INTEGER NOT NULL,                -- FK -> patients(id)
+    uploaded_by INTEGER NOT NULL,                -- FK -> users(id)
+    path        VARCHAR NOT NULL,                -- Storage path
+    notes       TEXT NULL,
+    taken_at    DATE NULL,                       -- Date the panorama was taken
+    created_at  DATETIME NULL,
+    updated_at  DATETIME NULL,
+    FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE,
+    FOREIGN KEY (uploaded_by) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 0 records currently
+
+
+================================================================================
+20. TABLE: cancel_reasons
+    Purpose: Reasons for reservation cancellations
+================================================================================
+CREATE TABLE cancel_reasons (
+    id             INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    reservation_id INTEGER NOT NULL,             -- FK -> reservations(id)
+    user_id        INTEGER NOT NULL,             -- FK -> users(id)
+    reason         TEXT NOT NULL,
+    created_at     DATETIME NULL,
+    updated_at     DATETIME NULL,
+    FOREIGN KEY (reservation_id) REFERENCES reservations(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
+================================================================================
+21. TABLE: otp_codes
+    Purpose: One-time password codes for password reset
+================================================================================
+CREATE TABLE otp_codes (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    user_id         INTEGER NOT NULL,            -- FK -> users(id)
+    code            VARCHAR NOT NULL,            -- 8-digit OTP code
+    ip_address      VARCHAR NULL,
+    expires_at      DATETIME NOT NULL,
+    used            TINYINT(1) NOT NULL DEFAULT 0,
+    used_at         DATETIME NULL,
+    attempts        INTEGER NOT NULL DEFAULT 0,
+    phone_number    VARCHAR NULL,
+    delivery_method VARCHAR NOT NULL DEFAULT 'manual',  -- manual / sms
+    created_at      DATETIME NULL,
+    updated_at      DATETIME NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
+================================================================================
+22. TABLE: audit_logs
+    Purpose: System audit trail for all important actions
+================================================================================
+CREATE TABLE audit_logs (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    user_id    INTEGER NULL,                     -- FK -> users(id)
+    action     VARCHAR NOT NULL,                 -- Action type
+    model      VARCHAR NULL,                     -- Model class name
+    model_id   INTEGER NULL,
+    old_data   TEXT NULL,                         -- JSON of old values
+    new_data   TEXT NULL,                         -- JSON of new values
+    ip_address VARCHAR NULL,
+    user_agent TEXT NULL,
+    created_at DATETIME NULL,
+    updated_at DATETIME NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+-- Indexes: (user_id), (model, model_id)
+
+
+================================================================================
+23. TABLE: sessions
+    Purpose: Database session storage (single-device enforcement)
+================================================================================
+CREATE TABLE sessions (
+    id            VARCHAR PRIMARY KEY NOT NULL,
+    user_id       INTEGER NULL,
+    ip_address    VARCHAR NULL,
+    user_agent    TEXT NULL,
+    payload       TEXT NOT NULL,
+    last_activity INTEGER NOT NULL
+);
+-- Indexes: (user_id), (last_activity)
+-- On login: old sessions for same user_id are deleted (single device)
+-- Session lifetime: 60 minutes
+
+
+================================================================================
+24. TABLE: password_reset_tokens
+    Purpose: Laravel default password reset tokens
+================================================================================
+CREATE TABLE password_reset_tokens (
+    email      VARCHAR PRIMARY KEY NOT NULL,
+    token      VARCHAR NOT NULL,
+    created_at DATETIME NULL
+);
+
+
+================================================================================
+25. TABLE: cache / cache_locks
+    Purpose: Laravel cache storage
+================================================================================
+CREATE TABLE cache (
+    key        VARCHAR PRIMARY KEY NOT NULL,
+    value      TEXT NOT NULL,
+    expiration INTEGER NOT NULL
+);
+
+CREATE TABLE cache_locks (
+    key        VARCHAR PRIMARY KEY NOT NULL,
+    owner      VARCHAR NOT NULL,
+    expiration INTEGER NOT NULL
+);
+
+
+================================================================================
+26. TABLE: jobs / job_batches / failed_jobs
+    Purpose: Laravel queue system
+================================================================================
+CREATE TABLE jobs (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    queue        VARCHAR NOT NULL,
+    payload      TEXT NOT NULL,
+    attempts     INTEGER NOT NULL,
+    reserved_at  INTEGER NULL,
+    available_at INTEGER NOT NULL,
+    created_at   INTEGER NOT NULL
+);
+
+CREATE TABLE job_batches (
+    id          VARCHAR PRIMARY KEY NOT NULL,
+    name        VARCHAR NOT NULL,
+    total_jobs  INTEGER NOT NULL,
+    pending_jobs INTEGER NOT NULL,
+    failed_jobs INTEGER NOT NULL,
+    failed_job_ids TEXT NOT NULL,
+    options     TEXT NULL,
+    cancelled_at INTEGER NULL,
+    created_at  INTEGER NOT NULL,
+    finished_at INTEGER NULL
+);
+
+CREATE TABLE failed_jobs (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    uuid       VARCHAR NOT NULL UNIQUE,
+    connection TEXT NOT NULL,
+    queue      TEXT NOT NULL,
+    payload    TEXT NOT NULL,
+    exception  TEXT NOT NULL,
+    failed_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+
+================================================================================
+27. TABLE: migrations
+    Purpose: Laravel migration tracking
+================================================================================
+CREATE TABLE migrations (
+    id        INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    migration VARCHAR NOT NULL,
+    batch     INTEGER NOT NULL
+);
+
+
+================================================================================
+  ENTITY RELATIONSHIP SUMMARY
+================================================================================
+
+roles (1) ----< users (many)
+users (1) ----< patients (many)           via added_by
+users (1) ----< reservations (many)       via user_id
+users (1) ----< cases (many)              via user_id
+users (1) ----< case_evaluations (many)   via evaluator_id
+users (1) ----< audit_logs (many)         via user_id
+users (1) ----< otp_codes (many)          via user_id
+
+courses (1) ----< course_schedules (many)
+courses (1) ----< course_rules (1)
+courses (1) ----< course_evaluation_stages (many)
+courses (1) ----< course_works (many)
+courses (many) >----< users (many)        via course_student
+
+patients (1) ----< reservations (many)
+patients (1) ----< cases (many)
+patients (1) ----< patient_teeth (many)
+patients (1) ----< patient_health (1)
+patients (1) ----< patient_perio (many)
+patients (1) ----< panorama_images (many)
+patients (many) >----< users (many)       via patient_access
+
+reservations (1) ----< cancel_reasons (many)
+cases (1) ----< case_evaluations (many)
+cases (1) ----< case_grants (many)
+cases (1) ----< case_images (many)
+
+
+================================================================================
+  RECORD COUNTS SUMMARY
+================================================================================
+
+roles:                    4
+users:                    5
+courses:                  4
+course_schedules:         4
+course_rules:             4
+course_evaluation_stages: 12
+course_works:             20
+course_student:           6
+patients:                 6
+patient_teeth:            7
+patient_health:           1
+patient_perio:            1
+patient_access:           0
+reservations:             5
+cases:                    0
+case_evaluations:         0
+case_grants:              0
+case_images:              0
+panorama_images:          0
+cancel_reasons:           0
+otp_codes:                0
+audit_logs:               16
+sessions:                 1
+
+
+================================================================================
+  API ROUTES SUMMARY
+================================================================================
+
+GET    /api/user                          -> Current logged-in user info
+GET    /api/profile                       -> Profile details
+PUT    /api/profile/password              -> Change password
+PUT    /api/profile/phone                 -> Update phone
+
+GET    /api/patients                      -> List patients
+POST   /api/patients                      -> Create patient
+GET    /api/patients/{id}                 -> Patient details
+
+GET    /api/patients/{id}/panorama        -> Panorama images for patient
+POST   /api/patients/{id}/panorama        -> Upload panorama image
+
+GET    /api/reservations                  -> List reservations
+POST   /api/reservations                  -> Create reservation
+PUT    /api/reservations/{id}/confirm     -> Confirm reservation
+PUT    /api/reservations/{id}/cancel      -> Cancel reservation
+
+GET    /api/cases                         -> List cases
+POST   /api/cases                         -> Create case
+GET    /api/cases/session-status          -> Check session limit
+GET    /api/cases/{id}                    -> Case details
+GET    /api/cases/{id}/qr                 -> QR code data (session-gated)
+POST   /api/images/upload                 -> Upload case image
+
+GET    /api/cases/{id}/evaluations        -> List evaluations for case
+POST   /api/cases/{id}/evaluate           -> Submit evaluation (supervisor)
+POST   /api/evaluations/qr               -> Evaluate from QR scan
+
+GET    /api/grants                        -> List grants
+POST   /api/grants                        -> Create grant
+PUT    /api/grants/{id}/accept            -> Accept grant
+PUT    /api/grants/{id}/reject            -> Reject grant
+PUT    /api/grants/{id}/cancel            -> Cancel grant
+
+GET    /api/stats                         -> Dashboard statistics
+GET    /api/courses                       -> List courses
+GET    /api/courses/{id}/works            -> Course works/treatments
+
+GET    /api/admin/otp-codes               -> Active OTP codes (admin only)
+GET    /api/audit-log                     -> Audit log (admin/ayham only)

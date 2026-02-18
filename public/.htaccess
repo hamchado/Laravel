@@ -1,0 +1,70 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+    
+    # PWA Optimization
+    <IfModule mod_expires.c>
+        ExpiresActive On
+        
+        # Manifest and Service Worker - no cache
+        <FilesMatch "\.(json|js)$">
+            ExpiresDefault "access"
+            Header set Cache-Control "no-cache, must-revalidate"
+        </FilesMatch>
+        
+        # Images
+        <FilesMatch "\.(png|jpg|jpeg|gif|ico|svg)$">
+            ExpiresDefault "access plus 1 year"
+            Header set Cache-Control "public, immutable"
+        </FilesMatch>
+        
+        # CSS and JS
+        <FilesMatch "\.(css|js)$">
+            ExpiresDefault "access plus 1 month"
+            Header set Cache-Control "public, must-revalidate"
+        </FilesMatch>
+        
+        # Fonts
+        <FilesMatch "\.(woff|woff2|ttf|otf|eot)$">
+            ExpiresDefault "access plus 1 year"
+            Header set Cache-Control "public, immutable"
+        </FilesMatch>
+    </IfModule>
+    
+    # Compression
+    <IfModule mod_deflate.c>
+        AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+    </IfModule>
+</IfModule>
+
+# Security Headers for PWA
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "DENY"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Service Worker Scope
+    Header set Service-Worker-Allowed "/"
+    
+    # PWA Headers
+    Header set X-PWA-Name "تطبيق التعلم الذكي"
+    Header set X-PWA-Version "1.0.0"
+</IfModule>

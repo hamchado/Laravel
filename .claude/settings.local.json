@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(php artisan route:list:*)",
+      "Bash(php artisan:*)",
+      "Bash(php artisan config:clear:*)",
+      "Bash(grep:*)",
+      "Bash(php:*)",
+      "Bash(ls:*)",
+      "Bash(dpkg:*)",
+      "Bash(pkg list-installed:*)",
+      "Bash(curl:*)",
+      "Bash(composer show:*)"
+    ]
+  }
+}

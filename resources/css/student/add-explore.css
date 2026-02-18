@@ -1,0 +1,255 @@
+patient-card-compact {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.patient-card-compact:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.12);
+}
+
+.patient-card-compact.selected {
+    border-color: var(--primary);
+    background: rgba(79, 70, 229, 0.03);
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.15);
+}
+
+.patient-card-compact.selected::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--primary);
+}
+
+.patient-card-header-compact {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 4px;
+}
+
+.patient-name-compact {
+    font-weight: 700;
+    color: var(--dark);
+    font-size: 14px;
+    line-height: 1.3;
+}
+
+.patient-status-badge {
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.patient-status-badge.available { background: #dbeafe; color: #1e40af; }
+.patient-status-badge.active { background: #fef3c7; color: #92400e; }
+.patient-status-badge.reserved { background: #fce7f3; color: #be185d; }
+
+.patient-info-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+    color: #4b5563;
+}
+
+.patient-info-item-compact {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.patient-info-item-compact i {
+    color: var(--primary);
+    font-size: 11px;
+    width: 14px;
+    text-align: center;
+}
+
+.select-radio-compact {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+.details-btn-compact {
+    width: 100%;
+    padding: 8px;
+    background: #f3f4f6;
+    border: none;
+    border-radius: 8px;
+    color: var(--dark);
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    margin-top: auto;
+}
+
+.details-btn-compact:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.detail-box-compact {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+}
+
+.detail-label-compact {
+    font-size: 11px;
+    color: #6b7280;
+    margin-bottom: 4px;
+}
+
+.detail-value-compact {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dark);
+}
+
+.dropdown-option-simple {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f3f4f6;
+    transition: all 0.2s;
+    font-size: 13px;
+}
+
+.dropdown-option-simple:hover {
+    background: rgba(99, 102, 241, 0.05);
+    color: var(--primary);
+}
+
+.dropdown-option-simple.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f9fafb;
+}
+
+/* أنماط خاصة بسجل الحالات الممنوحة */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+.status-badge.manh-pending { background: rgba(139, 92, 246, 0.15); color: #7c3aed; }
+.status-badge.manh-accepted { background: rgba(16, 185, 129, 0.15); color: #059669; }
+.status-badge.manh-rejected { background: rgba(239, 68, 68, 0.15); color: #dc2626; }
+.status-badge.manh-cancelled { background: rgba(107, 114, 128, 0.15); color: #4b5563; }
+
+.action-btn {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 0 3px;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+.action-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+.action-btn.accept { 
+    background: linear-gradient(135deg, #10b981, #059669); 
+    color: white; 
+}
+.action-btn.reject { 
+    background: white;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+.action-btn.reject:hover {
+    background: #fef2f2;
+}
+.action-btn.cancel {
+    background: white;
+    color: #6b7280;
+    border: 1px solid #d1d5db;
+}
+.action-btn.cancel:hover {
+    background: #f3f4f6;
+}
+.action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #9ca3af !important;
+    color: white !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.incoming-row-new {
+    background: rgba(139, 92, 246, 0.03);
+    border-right: 3px solid #8b5cf6;
+}
+
+.reason-text {
+    font-size: 11px;
+    color: #991b1b;
+    background: #fef2f2;
+    padding: 6px 10px;
+    border-radius: 6px;
+    margin-top: 6px;
+    border-right: 2px solid #ef4444;
+    display: block;
+    max-width: 200px;
+}
+
+.cancelled-info {
+    font-size: 11px;
+    color: #4b5563;
+    background: #f3f4f6;
+    padding: 6px 10px;
+    border-radius: 6px;
+    margin-top: 6px;
+    border-right: 2px solid #9ca3af;
+    display: block;
+}
+
+.accepted-info {
+    font-size: 11px;
+    color: #047857;
+    background: #d1fae5;
+    padding: 6px 10px;
+    border-radius: 6px;
+    margin-top: 6px;
+    border-right: 2px solid #10b981;
+    display: block;
+}
+
+@keyframes slideDown {
+    from { transform: translate(-50%, -20px); opacity: 0; }
+    to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}

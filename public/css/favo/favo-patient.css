@@ -1,0 +1,668 @@
+/* ====== أنماط قسم المرضى ====== */
+.section-title-all {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: clamp(16px, 4vw, 18px);
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 16px;
+}
+
+.section-title-all i {
+    color: #4f46e5;
+}
+
+/* ====== فلاتر التصفية ====== */
+.filters-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    border: 1px solid #e5e7eb;
+    background: white;
+    border-radius: 20px;
+    font-size: clamp(12px, 3.2vw, 13px);
+    font-weight: 600;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.filter-btn:hover {
+    border-color: #4f46e5;
+    color: #4f46e5;
+}
+
+.filter-btn.active {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: white;
+    border-color: #4f46e5;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+}
+
+/* ====== شريط البحث ====== */
+.search-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 16px 12px 44px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: clamp(13px, 3.5vw, 14px);
+    font-family: inherit;
+    background: white;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    font-size: 16px;
+}
+
+/* ====== شبكة بطاقات المرضى ====== */
+.patients-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+/* ====== بطاقة المريض ====== */
+.patient-card {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 16px;
+    padding: clamp(16px, 4vw, 20px);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.patient-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    border-color: #d1d5db;
+}
+
+/* حالة التجميد (محجوز مؤقتاً) */
+.patient-card.frozen {
+    border-color: #8b5cf6;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.03), rgba(139, 92, 246, 0.01));
+}
+
+.patient-card.frozen::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+}
+
+.frozen-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+/* نوع المريض (خاص/عام) */
+.patient-type-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.patient-type-badge.private {
+    background: rgba(79, 70, 229, 0.1);
+    color: #4f46e5;
+}
+
+.patient-type-badge.public {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+}
+
+/* رأس البطاقة */
+.patient-card-header {
+    margin-bottom: 16px;
+    padding-top: 8px;
+}
+
+.patient-name {
+    font-size: clamp(15px, 4vw, 17px);
+    font-weight: 800;
+    color: #1f2937;
+    margin-bottom: 4px;
+    line-height: 1.3;
+}
+
+.patient-record {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+/* معلومات المريض */
+.patient-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.patient-info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: clamp(12px, 3.2vw, 13px);
+    color: #4b5563;
+}
+
+.patient-info-item i {
+    color: #4f46e5;
+    font-size: 14px;
+    width: 20px;
+    text-align: center;
+}
+
+.patient-info-item.age i { color: #f59e0b; }
+.patient-info-item.phone i { color: #10b981; }
+.patient-info-item.date i { color: #8b5cf6; }
+
+/* آخر علاج */
+.last-treatment {
+    background: rgba(79, 70, 229, 0.05);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+    border-right: 3px solid #4f46e5;
+}
+
+.last-treatment-label {
+    font-size: 11px;
+    color: #6b7280;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.last-treatment-value {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+/* أزرار التحكم */
+.patient-card-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-action {
+    flex: 1;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: clamp(12px, 3.2vw, 13px);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.btn-view {
+    background: rgba(79, 70, 229, 0.1);
+    color: #4f46e5;
+}
+
+.btn-view:hover {
+    background: #4f46e5;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.btn-reserve {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+}
+
+.btn-reserve:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(139, 92, 246, 0.35);
+}
+
+.btn-reserve:disabled {
+    background: #d1d5db;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-cancel-reserve {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.btn-cancel-reserve:hover {
+    background: #dc2626;
+    color: white;
+}
+
+/* ====== أنماط Modal الحجز المؤقت ====== */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 10000;
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    position: relative;
+    background: white;
+    border-radius: 20px;
+    padding: clamp(20px, 5vw, 24px);
+    width: 90%;
+    max-width: 420px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 70px rgba(0,0,0,0.3);
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 24px;
+}
+
+.modal-icon.purple {
+    background: rgba(139, 92, 246, 0.1);
+    color: #8b5cf6;
+}
+
+.modal-title {
+    font-size: clamp(18px, 4.5vw, 20px);
+    font-weight: 800;
+    color: #1f2937;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.modal-text {
+    text-align: center;
+    color: #6b7280;
+    font-size: clamp(13px, 3.5vw, 14px);
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.modal-info-box {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.modal-info-item {
+    margin-bottom: 10px;
+}
+
+.modal-info-item:last-child {
+    margin-bottom: 0;
+}
+
+.modal-info-label {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 2px;
+}
+
+.modal-info-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.modal-info-value.primary {
+    color: #4f46e5;
+}
+
+/* Dropdown مخصص */
+.custom-dropdown {
+    position: relative;
+}
+
+.dropdown-header {
+    padding: 12px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.dropdown-header:hover {
+    border-color: #8b5cf6;
+}
+
+.dropdown-options {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 100;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.course-option {
+    padding: 14px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f3f4f6;
+    transition: all 0.2s;
+}
+
+.course-option:hover {
+    background: rgba(139, 92, 246, 0.05);
+}
+
+.course-option-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 4px;
+    font-size: 14px;
+}
+
+.course-option-meta {
+    font-size: 12px;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.dropdown-hint {
+    font-size: 11px;
+    color: #9ca3af;
+    margin-top: 6px;
+}
+
+/* بطاقة تفاصيل الجلسة */
+.session-info-card {
+    background: rgba(139, 92, 246, 0.05);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 12px;
+    padding: 14px;
+}
+
+.session-info-header {
+    font-size: 13px;
+    font-weight: 700;
+    color: #7c3aed;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.session-info-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #4b5563;
+    margin-bottom: 8px;
+}
+
+.session-info-row:last-child {
+    margin-bottom: 0;
+}
+
+.session-info-row i {
+    color: #8b5cf6;
+    width: 16px;
+    font-size: 12px;
+}
+
+/* أزرار Modal */
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.modal-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    transition: all 0.2s;
+    border: none;
+}
+
+.modal-btn.cancel {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.modal-btn.cancel:hover {
+    background: #e5e7eb;
+}
+
+.modal-btn.confirm {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+}
+
+.modal-btn.confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(139, 92, 246, 0.35);
+}
+
+.modal-btn.confirm:disabled {
+    background: #d1d5db;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.modal-warning {
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    border-radius: 10px;
+    padding: 12px;
+    margin-top: 16px;
+    font-size: 12px;
+    color: #92400e;
+}
+
+.modal-input-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #374151;
+}
+
+.modal-input-label .required {
+    color: #ef4444;
+}
+
+/* Modal عرض التفاصيل */
+.modal-header-custom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.close-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #f3f4f6;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.close-btn:hover {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.previous-treatments-section h4 {
+    font-size: 14px;
+    color: #374151;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.treatment-item {
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+    border-right: 3px solid #4f46e5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.treatment-date {
+    font-size: 11px;
+    color: #6b7280;
+}
+
+.btn-share {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.btn-share:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 640px) {
+    .patients-cards-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .patient-info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .patient-card-actions {
+        flex-direction: column;
+    }
+    
+    .modal-content {
+        width: 94%;
+        margin: 20px;
+    }
+}
+

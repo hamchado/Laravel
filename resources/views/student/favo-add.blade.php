@@ -1,0 +1,840 @@
+<!-- قسم إضافة مريض - favo-add -->
+<div id="favo-add-section" class="tab-content-section">
+    <div class="section-title">
+        <i class="fas fa-user-plus icon-primary"></i>
+        <span>إضافة مريض جديد</span>
+    </div>
+
+    <div class="input-container">
+        <!-- المعلومات الأساسية -->
+        <div class="info-section">
+            <div class="info-section-header">
+                <i class="fas fa-info-circle"></i>
+                المعلومات الأساسية
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <i class="fas fa-user icon-primary"></i>
+                    اسم المريض
+                </label>
+                <input type="text" id="patientName" class="text-input" placeholder="أدخل الاسم الكامل">
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <i class="fas fa-calendar-alt icon-pink"></i>
+                    سنة الميلاد
+                </label>
+                <div class="age-input-group">
+                    <input type="number" id="patientBirthYear" class="text-input" placeholder="مثال: 2015" min="1900" max="2025" onchange="calculateAge()">
+                    <div id="calculatedAge" class="age-display">
+                        <span id="ageValue">--</span> سنة
+                    </div>
+                </div>
+            </div>
+
+            <!-- نوع المريض (طفل/بالغ) -->
+            <div class="form-group">
+                <label>
+                    <i class="fas fa-child icon-yellow"></i>
+                    تصنيف المريض
+                </label>
+                <div class="age-type-options">
+                    <label class="age-type-option selected" onclick="selectAgeType('child')">
+                        <input type="radio" name="ageType" value="child" checked>
+                        <i class="fas fa-child"></i>
+                        <div class="age-type-info">
+                            <span class="age-type-title">طفل</span>
+                            <span class="age-type-desc">أقل من 12 سنة</span>
+                        </div>
+                    </label>
+                    <label class="age-type-option" onclick="selectAgeType('adult')">
+                        <input type="radio" name="ageType" value="adult">
+                        <i class="fas fa-user"></i>
+                        <div class="age-type-info">
+                            <span class="age-type-title">بالغ</span>
+                            <span class="age-type-desc">12 سنة فأكثر</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- معلومات ولي الأمر (تظهر فقط للأطفال) -->
+            <div id="parentInfoSection" class="parent-info-section">
+                <div class="parent-section-header">
+                    <i class="fas fa-user-shield"></i>
+                    معلومات ولي الأمر
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-user-tie icon-primary"></i>
+                        اسم ولي الأمر الثلاثي
+                    </label>
+                    <input type="text" id="parentName" class="text-input" placeholder="الاسم الكامل لولي الأمر">
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-phone icon-green"></i>
+                        رقم موبايل ولي الأمر
+                    </label>
+                    <div class="phone-input-wrapper">
+                        <span class="phone-prefix">09</span>
+                        <input type="tel" id="parentPhone" class="phone-input" placeholder="12345678" maxlength="8">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-birthday-cake icon-pink"></i>
+                        سنة ميلاد ولي الأمر (اختياري)
+                    </label>
+                    <input type="number" id="parentBirthYear" class="text-input" placeholder="مثال: 1980" min="1950" max="2005">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <i class="fas fa-venus-mars icon-pink"></i>
+                    الجنس
+                </label>
+                <div class="gender-options">
+                    <label class="gender-option selected" onclick="selectGender('male')">
+                        <input type="radio" name="patientGender" value="male" checked>
+                        <i class="fas fa-mars icon-primary"></i>
+                        ذكر
+                    </label>
+                    <label class="gender-option" onclick="selectGender('female')">
+                        <input type="radio" name="patientGender" value="female">
+                        <i class="fas fa-venus icon-pink"></i>
+                        أنثى
+                    </label>
+                </div>
+            </div>
+
+            <!-- رقم الموبايل (يختفي للأطفال) -->
+            <div id="patientPhoneSection" class="form-group" style="display: none;">
+                <label>
+                    <i class="fas fa-phone icon-green"></i>
+                    رقم الموبايل
+                </label>
+                <div class="phone-input-wrapper">
+                    <span class="phone-prefix">09</span>
+                    <input type="tel" id="patientPhone" class="phone-input" placeholder="12345678" maxlength="8">
+                </div>
+            </div>
+
+            <!-- المحافظة ومكان السكن -->
+            <div class="location-grid">
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-map-marker-alt icon-red"></i>
+                        المحافظة
+                    </label>
+                    <select id="patientGovernorate" class="text-input">
+                        <option value="">اختر المحافظة</option>
+                        <option value="damascus">دمشق</option>
+                        <option value="rif_damascus">ريف دمشق</option>
+                        <option value="aleppo">حلب</option>
+                        <option value="homs">حمص</option>
+                        <option value="hama">حماة</option>
+                        <option value="latakia">اللاذقية</option>
+                        <option value="tartous">طرطوس</option>
+                        <option value="idlib">إدلب</option>
+                        <option value="deir_ezzor">دير الزور</option>
+                        <option value="hasakah">الحسكة</option>
+                        <option value="raqqa">الرقة</option>
+                        <option value="daraa">درعا</option>
+                        <option value="suwayda">السويداء</option>
+                        <option value="quneitra">القنيطرة</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-home icon-yellow"></i>
+                        مكان السكن
+                    </label>
+                    <input type="text" id="patientAddress" class="text-input" placeholder="الحي / المنطقة">
+                </div>
+            </div>
+        </div>
+
+        <!-- الحالة الصحية -->
+        <div class="health-section">
+            <div class="health-section-header">
+                <i class="fas fa-heartbeat"></i>
+                الحالة الصحية
+            </div>
+
+            <!-- الأمراض المزمنة -->
+            <div class="form-group">
+                <label>
+                    الأمراض المزمنة (اختر ما ينطبق)
+                </label>
+                <div id="diseasesContainer" class="diseases-container">
+                    <label class="health-checkbox" onclick="toggleHealthOption(this)">
+                        <input type="checkbox" name="diseases" value="diabetes">
+                        <i class="fas fa-tint icon-yellow"></i>
+                        السكري
+                    </label>
+                    <label class="health-checkbox" onclick="toggleHealthOption(this)">
+                        <input type="checkbox" name="diseases" value="hypertension">
+                        <i class="fas fa-heart icon-red"></i>
+                        الضغط
+                    </label>
+                    <label class="health-checkbox" onclick="toggleHealthOption(this)">
+                        <input type="checkbox" name="diseases" value="rheumatoid">
+                        <i class="fas fa-bone icon-primary"></i>
+                        التهاب رثوي
+                    </label>
+                    <button type="button" onclick="showAddDiseaseModal()" class="add-disease-btn">
+                        <i class="fas fa-plus"></i>
+                        إضافة مرض
+                    </button>
+                </div>
+                <div id="addedDiseasesList" class="added-diseases-list"></div>
+            </div>
+
+            <!-- حالة السكري -->
+            <div id="diabetesControl" class="control-box diabetes">
+                <label>
+                    <i class="fas fa-tint"></i>
+                    هل السكر مضبوط؟
+                </label>
+                <div class="control-options">
+                    <label class="control-option" onclick="selectControl('diabetes', 'yes')">
+                        <input type="radio" name="diabetesControlled" value="yes">
+                        <i class="fas fa-check-circle"></i>
+                        مضبوط
+                    </label>
+                    <label class="control-option" onclick="selectControl('diabetes', 'no')">
+                        <input type="radio" name="diabetesControlled" value="no">
+                        <i class="fas fa-times-circle"></i>
+                        غير مضبوط
+                    </label>
+                </div>
+            </div>
+
+            <!-- حالة الضغط -->
+            <div id="hypertensionControl" class="control-box hypertension">
+                <label>
+                    <i class="fas fa-heart"></i>
+                    هل الضغط مضبوط؟
+                </label>
+                <div class="control-options">
+                    <label class="control-option" onclick="selectControl('bp', 'yes')">
+                        <input type="radio" name="bpControlled" value="yes">
+                        <i class="fas fa-check-circle"></i>
+                        مضبوط
+                    </label>
+                    <label class="control-option" onclick="selectControl('bp', 'no')">
+                        <input type="radio" name="bpControlled" value="no">
+                        <i class="fas fa-times-circle"></i>
+                        غير مضبوط
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== مخطط الأسنان FDI ===== -->
+        <div class="dental-chart-container">
+            <div class="dental-chart-header">
+                <div class="dental-chart-title">
+                    <i class="fas fa-tooth"></i>
+                    مخطط الأسنان (FDI)
+                </div>
+                <div class="dental-chart-legend">
+                    <span class="legend-item">
+                        <span class="legend-color restorative"></span>
+                        ترميمية
+                    </span>
+                    <span class="legend-item">
+                        <span class="legend-color endodontic"></span>
+                        لبية
+                    </span>
+                    <span class="legend-item">
+                        <span class="legend-color extraction"></span>
+                        قلع
+                    </span>
+                    <span class="legend-item">
+                        <span class="legend-color missing"></span>
+                        مفقود
+                    </span>
+                </div>
+            </div>
+
+            <!-- الأسنان الدائمة - شريط قابل للتمرير -->
+            <div class="dental-arch permanent-teeth">
+                <div class="arch-label">
+                    <i class="fas fa-crown"></i> الأسنان الدائمة
+                </div>
+                <div class="teeth-scroll-container">
+                    <div class="teeth-grid">
+                        <!-- الفك العلوي الدائم -->
+                        <div class="teeth-row upper">
+                            <button class="tooth-btn permanent" data-tooth="18" onclick="selectTooth(18)">18</button>
+                            <button class="tooth-btn permanent" data-tooth="17" onclick="selectTooth(17)">17</button>
+                            <button class="tooth-btn permanent" data-tooth="16" onclick="selectTooth(16)">16</button>
+                            <button class="tooth-btn permanent" data-tooth="15" onclick="selectTooth(15)">15</button>
+                            <button class="tooth-btn permanent" data-tooth="14" onclick="selectTooth(14)">14</button>
+                            <button class="tooth-btn permanent" data-tooth="13" onclick="selectTooth(13)">13</button>
+                            <button class="tooth-btn permanent" data-tooth="12" onclick="selectTooth(12)">12</button>
+                            <button class="tooth-btn permanent" data-tooth="11" onclick="selectTooth(11)">11</button>
+                            
+                            <div class="midline"></div>
+                            
+                            <button class="tooth-btn permanent" data-tooth="21" onclick="selectTooth(21)">21</button>
+                            <button class="tooth-btn permanent" data-tooth="22" onclick="selectTooth(22)">22</button>
+                            <button class="tooth-btn permanent" data-tooth="23" onclick="selectTooth(23)">23</button>
+                            <button class="tooth-btn permanent" data-tooth="24" onclick="selectTooth(24)">24</button>
+                            <button class="tooth-btn permanent" data-tooth="25" onclick="selectTooth(25)">25</button>
+                            <button class="tooth-btn permanent" data-tooth="26" onclick="selectTooth(26)">26</button>
+                            <button class="tooth-btn permanent" data-tooth="27" onclick="selectTooth(27)">27</button>
+                            <button class="tooth-btn permanent" data-tooth="28" onclick="selectTooth(28)">28</button>
+                        </div>
+                        
+                        <div class="jaw-separator"></div>
+                        
+                        <!-- الفك السفلي الدائم -->
+                        <div class="teeth-row lower">
+                            <button class="tooth-btn permanent" data-tooth="48" onclick="selectTooth(48)">48</button>
+                            <button class="tooth-btn permanent" data-tooth="47" onclick="selectTooth(47)">47</button>
+                            <button class="tooth-btn permanent" data-tooth="46" onclick="selectTooth(46)">46</button>
+                            <button class="tooth-btn permanent" data-tooth="45" onclick="selectTooth(45)">45</button>
+                            <button class="tooth-btn permanent" data-tooth="44" onclick="selectTooth(44)">44</button>
+                            <button class="tooth-btn permanent" data-tooth="43" onclick="selectTooth(43)">43</button>
+                            <button class="tooth-btn permanent" data-tooth="42" onclick="selectTooth(42)">42</button>
+                            <button class="tooth-btn permanent" data-tooth="41" onclick="selectTooth(41)">41</button>
+                            
+                            <div class="midline"></div>
+                            
+                            <button class="tooth-btn permanent" data-tooth="31" onclick="selectTooth(31)">31</button>
+                            <button class="tooth-btn permanent" data-tooth="32" onclick="selectTooth(32)">32</button>
+                            <button class="tooth-btn permanent" data-tooth="33" onclick="selectTooth(33)">33</button>
+                            <button class="tooth-btn permanent" data-tooth="34" onclick="selectTooth(34)">34</button>
+                            <button class="tooth-btn permanent" data-tooth="35" onclick="selectTooth(35)">35</button>
+                            <button class="tooth-btn permanent" data-tooth="36" onclick="selectTooth(36)">36</button>
+                            <button class="tooth-btn permanent" data-tooth="37" onclick="selectTooth(37)">37</button>
+                            <button class="tooth-btn permanent" data-tooth="38" onclick="selectTooth(38)">38</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- الأسنان المؤقتة (تظهر عند اختيار طفل) -->
+            <div id="primaryTeethSection" class="dental-arch primary-teeth">
+                <div class="arch-label primary-label">
+                    <i class="fas fa-baby"></i> الأسنان المؤقتة (اللبنية)
+                </div>
+                <div class="teeth-scroll-container">
+                    <div class="teeth-grid">
+                        <!-- الفك العلوي المؤقت -->
+                        <div class="teeth-row upper primary">
+                            <div class="empty-tooth"></div>
+                            <div class="empty-tooth"></div>
+                            <button class="tooth-btn primary" data-tooth="55" onclick="selectTooth(55)">55</button>
+                            <button class="tooth-btn primary" data-tooth="54" onclick="selectTooth(54)">54</button>
+                            <button class="tooth-btn primary" data-tooth="53" onclick="selectTooth(53)">53</button>
+                            <button class="tooth-btn primary" data-tooth="52" onclick="selectTooth(52)">52</button>
+                            <button class="tooth-btn primary" data-tooth="51" onclick="selectTooth(51)">51</button>
+                            
+                            <div class="midline"></div>
+                            
+                            <button class="tooth-btn primary" data-tooth="61" onclick="selectTooth(61)">61</button>
+                            <button class="tooth-btn primary" data-tooth="62" onclick="selectTooth(62)">62</button>
+                            <button class="tooth-btn primary" data-tooth="63" onclick="selectTooth(63)">63</button>
+                            <button class="tooth-btn primary" data-tooth="64" onclick="selectTooth(64)">64</button>
+                            <button class="tooth-btn primary" data-tooth="65" onclick="selectTooth(65)">65</button>
+                            <div class="empty-tooth"></div>
+                            <div class="empty-tooth"></div>
+                        </div>
+                        
+                        <div class="jaw-separator light"></div>
+                        
+                        <!-- الفك السفلي المؤقت -->
+                        <div class="teeth-row lower primary">
+                            <div class="empty-tooth"></div>
+                            <div class="empty-tooth"></div>
+                            <button class="tooth-btn primary" data-tooth="85" onclick="selectTooth(85)">85</button>
+                            <button class="tooth-btn primary" data-tooth="84" onclick="selectTooth(84)">84</button>
+                            <button class="tooth-btn primary" data-tooth="83" onclick="selectTooth(83)">83</button>
+                            <button class="tooth-btn primary" data-tooth="82" onclick="selectTooth(82)">82</button>
+                            <button class="tooth-btn primary" data-tooth="81" onclick="selectTooth(81)">81</button>
+                            
+                            <div class="midline"></div>
+                            
+                            <button class="tooth-btn primary" data-tooth="71" onclick="selectTooth(71)">71</button>
+                            <button class="tooth-btn primary" data-tooth="72" onclick="selectTooth(72)">72</button>
+                            <button class="tooth-btn primary" data-tooth="73" onclick="selectTooth(73)">73</button>
+                            <button class="tooth-btn primary" data-tooth="74" onclick="selectTooth(74)">74</button>
+                            <button class="tooth-btn primary" data-tooth="75" onclick="selectTooth(75)">75</button>
+                            <div class="empty-tooth"></div>
+                            <div class="empty-tooth"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== قسم القلح (Periodontal Chart) ===== -->
+            <div class="periodontal-section">
+                <div class="periodontal-header">
+                    <div class="periodontal-title">
+                        <i class="fas fa-teeth-open"></i>
+                        فحص القلح والأنسجة اللثوية
+                    </div>
+                    <div class="periodontal-legend">
+                        <span class="p-legend-item mild">بسيط</span>
+                        <span class="p-legend-item moderate">متوسط</span>
+                        <span class="p-legend-item severe">شديد</span>
+                    </div>
+                </div>
+
+                <!-- الفك العلوي - 3 أقسام -->
+                <div class="periodontal-arch">
+                    <div class="arch-label">
+                        <i class="fas fa-arrow-up"></i> الفك العلوي
+                    </div>
+                    <div class="periodontal-grid upper">
+                        <!-- السدس 1: الخلفية اليمنى (18-14) -->
+                        <div class="periodontal-segment" data-segment="upper-right" onclick="selectPeriodontalSegment('upper-right')">
+                            <div class="segment-label">الخلفية اليمنى</div>
+                            <div class="segment-teeth">18-14</div>
+                            <div class="segment-status" id="status-upper-right">لم يتم الفحص</div>
+                            <div class="pockets-section" id="pockets-upper-right" style="display: none;">
+                                <div class="pocket-inputs">
+                                    <label>عمق الجيب (mm):</label>
+                                    <div class="pocket-grid">
+                                        <input type="number" class="pocket-input" placeholder="1" min="1" max="15" step="0.5">
+                                        <input type="number" class="pocket-input" placeholder="2" min="1" max="15" step="0.5">
+                                        <input type="number" class="pocket-input" placeholder="3" min="1" max="15" step="0.5">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- السدس 2: الأمامية (13-23) -->
+                        <div class="periodontal-segment" data-segment="upper-front" onclick="selectPeriodontalSegment('upper-front')">
+                            <div class="segment-label">الأمامية</div>
+                            <div class="segment-teeth">13-23</div>
+                            <div class="segment-status" id="status-upper-front">لم يتم الفحص</div>
+                            <div class="pockets-section" id="pockets-upper-front" style="display: none;">
+                                <div class="pocket-inputs">
+                                    <label>عمق الجيب (mm):</label>
+                                    <div class="pocket-grid">
+                                        <input type="number" class="pocket-input" placeholder="1" min="1" max="15" step="0.5">
+                                        <input type="number" class="pocket-input" placeholder="2" min="1" max="15" step="0.5">
+                                        <input type="number" class="pocket-input" placeholder="3" min="1" max="15" step="0.5">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- السدس 3: الخلفية اليسرى (24-28) -->
+                        <div class="periodontal-segment" data-segment="upper-left" onclick="selectPeriodontalSegment('upper-left')">
+                            <div class="segment-label">الخلفية اليسرى</div>
+                            <div class="segment-teeth">24-28</div>
+                            <div class="segment-status" id="status-upper-left">لم يتم الفحص</div>
+                            <div class="pockets-section" id="pockets-upper-left" style="display: none;">
+                                <div class="pocket-inputs">
+                                    <label>عمق الجيب (mm):</label>
+                                    <div class="pocket-grid">
+                                        <input type="number" class="pocket-input" placeholder="1" min="1" max="15" step="0.5">
+                                        <input type="number" class="pocket-input" placeholder="2" min="1" max="15" step="0.5">
+                                        <input type="number" class="pocket-input" placeholder="3" min="1" max="15" step="0.5">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- الفك السفلي - 3 أقسام -->
+                <div class="periodontal-arch">
+                    <div class="arch-label">
+                        <i class="fas fa-arrow-down"></i> الفك السفلي
+                    </div>
+                    <div class="periodontal-grid lower">
+                        <!-- السدس 4: الخلفية اليسرى (38-34) -->
+                        <div class="periodontal-segment" data-segment="lower-left" onclick="selectPeriodontalSegment('lower-left')">
+                            <div class="segment-label">الخلفية اليسرى</div>
+                            <div class="segment-teeth">38-34</div>
+                            <div class="segment-status" id="status-lower-left">لم يتم الفحص</div>
+                            <div class="pockets-section" id="pockets-lower-left" style="display: none;">
+                                <div class="pocket-inputs">
+                                    <label>عمق الجيب (mm):</label>
+                                    <div class="pocket-grid">
+                                        <input type="number" class="pocket-input" placeholder="1" min="1" max="15" step="0.5">
+                                        <input type="number" class="pocket-input" placeholder="2" min="1" max="15" step="0.5">
+                                        <input type="number" class="pocket-input" placeholder="3" min="1" max="15" step="0.5">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- السدس 5: الأمامية (33-43) -->
+                        <div class="periodontal-segment" data-segment="lower-front" onclick="selectPeriodontalSegment('lower-front')">
+                            <div class="segment-label">الأمامية</div>
+                            <div class="segment-teeth">33-43</div>
+                            <div class="segment-status" id="status-lower-front">لم يتم الفحص</div>
+                            <div class="pockets-section" id="pockets-lower-front" style="display: none;">
+                                <div class="pocket-inputs">
+                                    <label>عمق الجيب (mm):</label>
+                                    <div class="pocket-grid">
+                                        <input type="number" class="pocket-input" placeholder="1" min="1" max="15" step="0.5">
+                                        <input type="number" class="pocket-input" placeholder="2" min="1" max="15" step="0.5">
+                                        <input type="number" class="pocket-input" placeholder="3" min="1" max="15" step="0.5">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- السدس 6: الخلفية اليمنى (44-48) -->
+                        <div class="periodontal-segment" data-segment="lower-right" onclick="selectPeriodontalSegment('lower-right')">
+                            <div class="segment-label">الخلفية اليمنى</div>
+                            <div class="segment-teeth">44-48</div>
+                            <div class="segment-status" id="status-lower-right">لم يتم الفحص</div>
+                            <div class="pockets-section" id="pockets-lower-right" style="display: none;">
+                                <div class="pocket-inputs">
+                                    <label>عمق الجيب (mm):</label>
+                                    <div class="pocket-grid">
+                                        <input type="number" class="pocket-input" placeholder="1" min="1" max="15" step="0.5">
+                                        <input type="number" class="pocket-input" placeholder="2" min="1" max="15" step="0.5">
+                                        <input type="number" class="pocket-input" placeholder="3" min="1" max="15" step="0.5">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ملخص القلح -->
+                <div id="periodontalSummary" class="periodontal-summary" style="display: none;">
+                    <div class="summary-header">
+                        <i class="fas fa-clipboard-check"></i>
+                        ملخص حالة اللثة
+                    </div>
+                    <div class="summary-grid" id="periodontalSummaryContent"></div>
+                </div>
+            </div>
+
+            <!-- إحصائيات الأسنان -->
+            <div id="teethStats" class="teeth-stats">
+                <div class="stats-header">
+                    <i class="fas fa-chart-pie icon-green"></i>
+                    إحصائيات الأسنان المحددة
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number fixed" id="fixedTeethCount">0</div>
+                        <div class="stat-label">ثابتة</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number mobile" id="mobileTeethCount">0</div>
+                        <div class="stat-label">متحركة</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number missing" id="missingTeethCount">0</div>
+                        <div class="stat-label">مفقودة</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number total" id="totalSelectedTeeth">0</div>
+                        <div class="stat-label">الإجمالي</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- قائمة الأسنان المحددة -->
+            <div id="selectedTeethList" class="selected-teeth-list">
+                <div class="list-header">
+                    <i class="fas fa-list-ul"></i>
+                    الأسنان المحددة:
+                </div>
+                <div id="teethListContainer" class="teeth-list-container"></div>
+            </div>
+        </div>
+
+        <!-- صلاحيات الوصول -->
+        <div class="access-section">
+            <div class="access-section-header">
+                <i class="fas fa-shield-alt"></i>
+                صلاحيات الوصول
+            </div>
+
+            <div class="access-options">
+                <label class="access-option selected" onclick="selectAccessType('private')">
+                    <input type="radio" name="accessType" value="private" checked>
+                    <div class="access-icon private">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="access-info">
+                        <div class="access-title">خاص (لي فقط)</div>
+                        <div class="access-desc">أنت فقط تستطيع رؤية وإدارة هذا المريض</div>
+                    </div>
+                    <i class="fas fa-check-circle check-icon"></i>
+                </label>
+
+                <label class="access-option" onclick="selectAccessType('public')">
+                    <input type="radio" name="accessType" value="public">
+                    <div class="access-icon public">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="access-info">
+                        <div class="access-title">عام (للجميع)</div>
+                        <div class="access-desc">جميع الطلاب يستطيعون رؤية هذا المريض</div>
+                    </div>
+                    <i class="fas fa-circle check-icon"></i>
+                </label>
+
+                <label class="access-option" onclick="selectAccessType('custom')">
+                    <input type="radio" name="accessType" value="custom">
+                    <div class="access-icon custom">
+                        <i class="fas fa-users-cog"></i>
+                    </div>
+                    <div class="access-info">
+                        <div class="access-title">مخصص (طلاب محددين)</div>
+                        <div class="access-desc">أنت مدير الحالة ويمكنك إضافة/إزالة طلاب</div>
+                    </div>
+                    <i class="fas fa-circle check-icon"></i>
+                </label>
+            </div>
+
+            <!-- إضافة طلاب مخصصين -->
+            <div id="customStudentsSection" class="custom-students-section">
+                <div class="custom-students-header">
+                    <i class="fas fa-user-plus"></i>
+                    إضافة طلاب بالرقم الجامعي
+                </div>
+                <div class="add-student-row">
+                    <input type="text" id="studentIdInput" class="text-input" placeholder="أدخل الرقم الجامعي">
+                    <button onclick="addStudent()" class="add-student-btn">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                <div id="studentsList" class="students-list">
+                    <span class="no-students">لم تتم إضافة طلاب بعد</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ملاحظات -->
+        <div class="form-group notes-group">
+            <label class="notes-label">
+                <i class="fas fa-sticky-note icon-gray"></i>
+                ملاحظات إضافية
+            </label>
+            <textarea id="patientNotes" class="text-input" rows="3" placeholder="أضف ملاحظات عن المريض..."></textarea>
+        </div>
+
+        <button onclick="addNewPatient()" class="submit-btn">
+            <i class="fas fa-plus-circle"></i>
+            إضافة المريض
+        </button>
+
+        <!-- تنبيه -->
+        <div class="important-notice">
+            <div class="notice-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="notice-content">
+                <div class="notice-title">ملاحظة هامة</div>
+                <div class="notice-text">
+                    أي تعديل على بيانات المريض بعد التثبيت يتطلب مراجعة <strong>مكتب قبول المرضى</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal اختيار حالة السن -->
+<div id="toothModal" class="tooth-modal">
+    <div class="tooth-modal-content">
+        <div class="modal-header">
+            <div>
+                <h3 class="modal-title">
+                    <i class="fas fa-tooth"></i>
+                    السن رقم <span id="selectedToothNumber" class="tooth-number"></span>
+                </h3>
+                <p class="modal-subtitle">اختر حالة السن المناسبة</p>
+            </div>
+            <button onclick="closeToothModal()" class="close-modal-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="condition-options">
+            <div class="condition-card restorative" onclick="selectToothCondition('restorative')">
+                <div class="condition-icon">
+                    <i class="fas fa-fill-drip"></i>
+                </div>
+                <div class="condition-info">
+                    <h4>ترميمية</h4>
+                    <p>حشوات تجميلية - Class I, II, III, IV, V</p>
+                </div>
+                <i class="fas fa-chevron-left condition-arrow"></i>
+            </div>
+
+            <div class="condition-card endodontic" onclick="selectToothCondition('endodontic')">
+                <div class="condition-icon">
+                    <i class="fas fa-syringe"></i>
+                </div>
+                <div class="condition-info">
+                    <h4>لبية</h4>
+                    <p>معالجة الجذور - سن كامل أو جذر فقط</p>
+                </div>
+                <i class="fas fa-chevron-left condition-arrow"></i>
+            </div>
+
+            <div class="condition-card extraction" onclick="selectToothCondition('extraction')">
+                <div class="condition-icon">
+                    <i class="fas fa-tooth"></i>
+                </div>
+                <div class="condition-info">
+                    <h4>قلع</h4>
+                    <p>سن متحرك، جذر، أو سن منطمر</p>
+                </div>
+                <i class="fas fa-chevron-left condition-arrow"></i>
+            </div>
+
+            <div class="condition-card missing" onclick="selectToothCondition('missing')">
+                <div class="condition-icon">
+                    <i class="fas fa-minus-circle"></i>
+                </div>
+                <div class="condition-info">
+                    <h4>مفقود</h4>
+                    <p>السن غير موجود (خلقي أو مفقود)</p>
+                </div>
+                <span class="direct-badge">مباشر</span>
+            </div>
+
+            <div class="condition-card delete-condition" onclick="removeToothCondition()">
+                <div class="condition-icon">
+                    <i class="fas fa-trash"></i>
+                </div>
+                <div class="condition-info">
+                    <h4>إزالة التحديد</h4>
+                    <p>إعادة السن للحالة الافتراضية</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal التفاصيل الفرعية -->
+<div id="subConditionModal" class="tooth-modal">
+    <div class="tooth-modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" id="subConditionTitle"></h3>
+            <button onclick="closeSubConditionModal()" class="close-modal-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="subConditionOptions" class="sub-condition-content"></div>
+        <div id="confirmSubConditionBtn" style="display: none;">
+            <button onclick="confirmToothCondition()" class="confirm-btn">
+                <i class="fas fa-check-circle"></i>
+                تأكيد الاختيار
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal اختيار درجة القلح -->
+<div id="periodontalModal" class="tooth-modal">
+    <div class="tooth-modal-content">
+        <div class="modal-header">
+            <div>
+                <h3 class="modal-title">
+                    <i class="fas fa-teeth-open" style="color: #059669;"></i>
+                    تحديد درجة القلح
+                </h3>
+                <p class="modal-subtitle" id="periodontalSegmentTitle">اختر درجة القلح للمنطقة</p>
+            </div>
+            <button onclick="closePeriodontalModal()" class="close-modal-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="periodontal-options">
+            <div class="perio-option healthy" onclick="selectPeriodontalGrade('healthy')">
+                <div class="perio-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="perio-info">
+                    <h4>لثة سليمة</h4>
+                    <p>لا يوجد قلح، لثة وردية صحية</p>
+                    <span class="perio-badge">Healthy</span>
+                </div>
+                <i class="fas fa-chevron-left"></i>
+            </div>
+
+            <div class="perio-option mild" onclick="selectPeriodontalGrade('mild')">
+                <div class="perio-icon">
+                    <i class="fas fa-circle"></i>
+                </div>
+                <div class="perio-info">
+                    <h4>قلح بسيط (Mild)</h4>
+                    <p>نزيف خفيف عند التسمير، جيب 1-3 مم</p>
+                    <span class="perio-badge">Gingivitis</span>
+                </div>
+                <i class="fas fa-chevron-left"></i>
+            </div>
+
+            <div class="perio-option moderate" onclick="selectPeriodontalGrade('moderate')">
+                <div class="perio-icon">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div class="perio-info">
+                    <h4>قلح متوسط (Moderate)</h4>
+                    <p>نزيف واضح، تراجع لثوي بسيط، جيب 4-6 مم</p>
+                    <span class="perio-badge">Moderate Periodontitis</span>
+                </div>
+                <i class="fas fa-chevron-left"></i>
+            </div>
+
+            <div class="perio-option severe" onclick="selectPeriodontalGrade('severe')">
+                <div class="perio-icon">
+                    <i class="fas fa-radiation"></i>
+                </div>
+                <div class="perio-info">
+                    <h4>قلح شديد (Severe)</h4>
+                    <p>نزيف غزير، تراجع لثوي كبير، جيب >7 مم، تحرك الأسنان</p>
+                    <span class="perio-badge">Advanced Periodontitis</span>
+                </div>
+                <i class="fas fa-chevron-left"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal إضافة مرض -->
+<div id="addDiseaseModal" class="tooth-modal small-modal">
+    <div class="tooth-modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-plus-circle"></i>
+                إضافة مرض جديد
+            </h3>
+            <button onclick="closeAddDiseaseModal()" class="close-modal-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-input-group">
+            <input type="text" id="newDiseaseInput" class="text-input" placeholder="اكتب اسم المرض...">
+        </div>
+        <button onclick="addCustomDisease()" class="confirm-btn">
+            <i class="fas fa-plus"></i>
+            إضافة المرض
+        </button>
+    </div>
+</div>
+
+<link rel="stylesheet" href="{{ asset('css/favo/favo-add.css') }}">
+
+<!-- ترتيب التحميل: البيانات أولاً ثم الواجهة ثم الإعدادات ثم منطق النموذج -->
+<script src="{{ asset('js/favo/favo-data.js') }}"></script>
+<script src="{{ asset('js/favo/favo-ui.js') }}"></script>
+<script src="{{ asset('js/favo/favo-mantic.js') }}"></script>
+<script src="{{ asset('js/favo/favo-add.js') }}"></script>
+

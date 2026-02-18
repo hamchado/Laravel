@@ -1,0 +1,2912 @@
+@extends('layouts.app')
+
+@section('title', 'الصفحة الرئيسية')
+@section('page_title', 'الرئيسية')
+
+@section('content')
+
+{{-- ========================================== --}}
+{{-- CSS VARIABLES & RESET - تصميم متجاوب --}}
+{{-- ========================================== --}}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&family=Cairo:wght@400;500;600;700&display=swap');
+    
+    :root {
+        --primary: #4f46e5;
+        --primary-light: #6366f1;
+        --secondary: #10b981;
+        --accent: #ec4899;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --dark: #1f2937;
+        --gray: #6b7280;
+        --gray-light: #f3f4f6;
+        --gray-100: #f3f4f6;
+        --gray-200: #e5e7eb;
+        
+        --space-xs: clamp(0.2rem, 0.4vw, 0.4rem);
+        --space-sm: clamp(0.4rem, 0.8vw, 0.6rem);
+        --space-md: clamp(0.6rem, 1.2vw, 0.8rem);
+        --space-lg: clamp(0.8rem, 1.5vw, 1rem);
+        --space-xl: clamp(1rem, 2vw, 1.25rem);
+        --space-2xl: clamp(1.25rem, 2.5vw, 1.5rem);
+        
+        --text-xs: clamp(0.65rem, 0.9vw, 0.75rem);
+        --text-sm: clamp(0.75rem, 1vw, 0.85rem);
+        --text-base: clamp(0.85rem, 1.2vw, 0.95rem);
+        --text-lg: clamp(0.95rem, 1.5vw, 1.1rem);
+        --text-xl: clamp(1.1rem, 2vw, 1.25rem);
+        --text-2xl: clamp(1.25rem, 2.5vw, 1.5rem);
+        --text-3xl: clamp(1.5rem, 3vw, 1.75rem);
+        
+        --radius-sm: clamp(0.3rem, 0.8vw, 0.4rem);
+        --radius: clamp(0.4rem, 1vw, 0.6rem);
+        --radius-lg: clamp(0.6rem, 1.5vw, 0.8rem);
+        --radius-xl: clamp(0.8rem, 2vw, 1rem);
+        
+        --icon-sm: clamp(0.7rem, 1.2vw, 0.8rem);
+        --icon-base: clamp(0.85rem, 1.5vw, 1rem);
+        --icon-lg: clamp(1rem, 2vw, 1.25rem);
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        font-family: 'Tajawal', 'Cairo', sans-serif;
+        font-size: var(--text-base);
+        line-height: 1.5;
+        color: var(--dark);
+        background: #fafafa;
+    }
+</style>
+
+{{-- ========================================== --}}
+{{-- HEADER --}}
+{{-- ========================================== --}}
+<style>
+    .page-header {
+        text-align: center;
+        margin-bottom: var(--space-xl);
+        padding: var(--space-lg) 0;
+    }
+    .page-header h1 {
+        font-size: var(--text-3xl);
+        color: var(--dark);
+        margin-bottom: var(--space-sm);
+        font-weight: 700;
+        line-height: 1.2;
+    }
+    .page-header p {
+        color: var(--gray);
+        font-size: var(--text-base);
+    }
+</style>
+
+<div class="page-header">
+    <h1>مرحباً بك في النظام الطبي</h1>
+    <p>نظرة عامة على نشاطك اليومي</p>
+</div>
+
+{{-- ========================================== --}}
+{{-- 1. STATS SECTION --}}
+{{-- ========================================== --}}
+<style>
+    .section-card {
+        margin-bottom: var(--space-lg);
+        border-radius: var(--radius);
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        transition: all 0.3s ease;
+    }
+    .section-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    
+    .section-header-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--space-md) var(--space-lg);
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.2s ease;
+        border-bottom: 1px solid transparent;
+    }
+    .section-header-bar:hover { background: rgba(79, 70, 229, 0.02); }
+    .section-card.active .section-header-bar { border-bottom-color: var(--gray-200); }
+    
+    .section-title-group {
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+    }
+    .section-icon-box {
+        width: clamp(32px, 6vw, 36px);
+        height: clamp(32px, 6vw, 36px);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: clamp(14px, 3vw, 16px);
+        flex-shrink: 0;
+    }
+    .section-title-text {
+        font-size: var(--text-lg);
+        font-weight: 700;
+        color: var(--dark);
+        line-height: 1.3;
+    }
+    .section-subtitle-text {
+        font-size: var(--text-xs);
+        color: var(--gray);
+        margin-top: 2px;
+    }
+    .section-controls {
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+    }
+    .section-badge {
+        background: var(--gray-light);
+        color: var(--gray);
+        padding: var(--space-xs) var(--space-sm);
+        border-radius: 12px;
+        font-size: var(--text-xs);
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    .section-toggle-btn {
+        width: clamp(24px, 5vw, 28px);
+        height: clamp(24px, 5vw, 28px);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        background: var(--gray-light);
+        border: none;
+        cursor: pointer;
+        flex-shrink: 0;
+        pointer-events: auto;
+    }
+    .section-toggle-btn i {
+        transition: transform 0.3s ease;
+        color: var(--gray);
+        font-size: var(--text-xs);
+    }
+    .section-card.active .section-toggle-btn { background: var(--primary); }
+    .section-card.active .section-toggle-btn i { color: white; transform: rotate(180deg); }
+    
+    .section-body {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        opacity: 0;
+    }
+    .section-card.active .section-body {
+        max-height: 5000px;
+        opacity: 1;
+    }
+    .section-inner { padding: 0 var(--space-lg) var(--space-lg); }
+    
+    .stats-section .section-icon-box { 
+        background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(236, 72, 153, 0.1)); 
+        color: var(--primary); 
+    }
+    
+    .scroll-hint {
+        font-size: var(--text-xs);
+        color: var(--gray);
+        background: rgba(79, 70, 229, 0.08);
+        padding: var(--space-xs) var(--space-sm);
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-xs);
+        margin-bottom: var(--space-md);
+    }
+    .scroll-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        margin: 0 calc(-1 * var(--space-md));
+        padding: 0 var(--space-md);
+    }
+    .scroll-container::-webkit-scrollbar { display: none; }
+    .cards-row {
+        display: flex;
+        gap: var(--space-md);
+        padding-bottom: var(--space-sm);
+    }
+    .stat-card {
+        background: white;
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius);
+        padding: var(--space-md);
+        min-width: clamp(120px, 30vw, 140px);
+        flex-shrink: 0;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .stat-icon {
+        width: clamp(32px, 6vw, 36px);
+        height: clamp(32px, 6vw, 36px);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: var(--space-sm);
+        font-size: clamp(14px, 3vw, 16px);
+    }
+    .stat-label { font-size: var(--text-xs); color: var(--gray); margin-bottom: 2px; }
+    .stat-value {
+        font-size: clamp(1.25rem, 4vw, 1.5rem);
+        font-weight: 700;
+        margin-bottom: 2px;
+        line-height: 1;
+    }
+    .stat-trend { font-size: var(--text-xs); display: flex; align-items: center; gap: 4px; }
+    .progress-bar {
+        height: 3px;
+        background: var(--gray-200);
+        border-radius: 2px;
+        overflow: hidden;
+        margin-top: var(--space-sm);
+    }
+    .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.1s; }
+</style>
+
+<div class="section-card stats-section active" id="stats-section" data-section="stats">
+    <div class="section-header-bar" data-toggle="stats">
+        <div class="section-title-group">
+            <div class="section-icon-box">
+                <i class="fas fa-chart-bar"></i>
+            </div>
+            <div>
+                <div class="section-title-text">الإحصائيات الحيوية</div>
+                <div class="section-subtitle-text">نظرة سريعة على أدائك</div>
+            </div>
+        </div>
+        <div class="section-controls">
+            <span class="section-badge">6 مؤشرات</span>
+            <button type="button" class="section-toggle-btn" data-action="toggle-section" data-target="stats">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+    </div>
+    
+    <div class="section-body">
+        <div class="section-inner">
+            <div class="scroll-hint">اسحب للمزيد</div>
+            <div class="scroll-container">
+                <div class="cards-row">
+                    @php
+                        $stats = [
+                            ['icon' => 'fa-check-circle', 'color' => 'var(--secondary)', 'bg' => 'rgba(16, 185, 129, 0.1)', 'label' => 'المرضى الجدد', 'value' => 48, 'trend' => '+12%', 'trendColor' => 'var(--secondary)'],
+                            ['icon' => 'fa-spinner', 'color' => 'var(--warning)', 'bg' => 'rgba(245, 158, 11, 0.1)', 'label' => 'قيد الإنجاز', 'value' => 23, 'trend' => '5 حالات', 'trendColor' => 'var(--warning)'],
+                            ['icon' => 'fa-exclamation-circle', 'color' => 'var(--danger)', 'bg' => 'rgba(239, 68, 68, 0.1)', 'label' => 'بانتظار الموافقة', 'value' => 7, 'trend' => 'مراجعة', 'trendColor' => 'var(--danger)'],
+                            ['icon' => 'fa-user-check', 'color' => 'var(--primary)', 'bg' => 'rgba(79, 70, 229, 0.1)', 'label' => 'المعالجين', 'value' => 156, 'trend' => '+24%', 'trendColor' => 'var(--primary)'],
+                            ['icon' => 'fa-calendar-check', 'color' => 'var(--accent)', 'bg' => 'rgba(236, 72, 153, 0.1)', 'label' => 'المواعيد', 'value' => 14, 'trend' => '3 قادمة', 'trendColor' => 'var(--accent)'],
+                            ['icon' => 'fa-file-medical', 'color' => '#8b5cf6', 'bg' => 'rgba(139, 92, 246, 0.1)', 'label' => 'التقارير', 'value' => 89, 'trend' => 'مكتملة', 'trendColor' => '#8b5cf6']
+                        ];
+                    @endphp
+                    
+                    @foreach($stats as $index => $stat)
+                    <div class="stat-card" data-stat-index="{{ $index }}" data-stat-label="{{ $stat['label'] }}" data-stat-value="{{ $stat['value'] }}">
+                        <div class="stat-icon" style="background: {{ $stat['bg'] }}; color: {{ $stat['color'] }};">
+                            <i class="fas {{ $stat['icon'] }}"></i>
+                        </div>
+                        <div class="stat-label">{{ $stat['label'] }}</div>
+                        <div class="stat-value" style="color: {{ $stat['color'] }};">{{ $stat['value'] }}</div>
+                        <div class="stat-trend" style="color: {{ $stat['trendColor'] }};">{{ $stat['trend'] }}</div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="stats-progress"></div></div>
+        </div>
+    </div>
+</div>
+
+{{-- ========================================== --}}
+{{-- 2. COURSES SECTION - المقررات السريرية --}}
+{{-- ========================================== --}}
+<style>
+    .courses-section .section-icon-box { 
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05)); 
+        color: var(--secondary); 
+    }
+    
+    .data-table-wrapper {
+        overflow-x: auto;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--gray-200);
+        -webkit-overflow-scrolling: touch;
+    }
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 600px;
+    }
+    .data-table th,
+    .data-table td {
+        padding: var(--space-md);
+        text-align: right;
+        border-bottom: 1px solid var(--gray-200);
+        font-size: var(--text-sm);
+    }
+    .data-table th {
+        background: rgba(16, 185, 129, 0.08);
+        font-weight: 600;
+        color: var(--dark);
+        white-space: nowrap;
+    }
+    .data-table tr:hover { background: rgba(16, 185, 129, 0.02); }
+    
+    .course-title { font-size: var(--text-sm); font-weight: 600; color: var(--dark); margin-bottom: 2px; }
+    .course-meta { font-size: var(--text-xs); color: var(--gray); }
+    
+    .status-badge {
+        padding: var(--space-xs) var(--space-sm);
+        border-radius: 12px;
+        font-size: var(--text-xs);
+        font-weight: 600;
+        color: white;
+        display: inline-block;
+        white-space: nowrap;
+    }
+    
+    .table-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: var(--space-md);
+        padding-top: var(--space-md);
+        border-top: 1px solid var(--gray-200);
+        flex-wrap: wrap;
+        gap: var(--space-sm);
+    }
+    .pagination-info { font-size: var(--text-xs); color: var(--gray); }
+    .pagination-btns { display: flex; gap: var(--space-sm); }
+    .page-btn {
+        padding: var(--space-sm) var(--space-md);
+        border: 1.5px solid var(--gray-200);
+        background: white;
+        color: var(--gray);
+        border-radius: 6px;
+        font-size: var(--text-xs);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        transition: all 0.2s;
+        font-weight: 600;
+        pointer-events: auto;
+    }
+    .page-btn:hover:not(:disabled) {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: rgba(79, 70, 229, 0.05);
+    }
+    .page-btn:disabled { 
+        opacity: 0.5; 
+        cursor: not-allowed; 
+        background: var(--gray-100);
+        border-color: var(--gray-200);
+        color: var(--gray);
+    }
+    .page-btn.primary {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+    }
+    .page-btn.primary:hover:not(:disabled) { 
+        background: #4338ca; 
+        border-color: #4338ca;
+    }
+    .page-btn.primary:disabled {
+        background: #a5b4fc;
+        border-color: #a5b4fc;
+        color: white;
+        opacity: 0.6;
+    }
+</style>
+
+<div class="section-card courses-section active" id="courses-section" data-section="courses">
+    <div class="section-header-bar" data-toggle="courses">
+        <div class="section-title-group">
+            <div class="section-icon-box">
+                <i class="fas fa-book-medical"></i>
+            </div>
+            <div>
+                <div class="section-title-text">المقررات السريرية</div>
+                <div class="section-subtitle-text">المقررات النشطة حالياً</div>
+            </div>
+        </div>
+        <div class="section-controls">
+            <span class="section-badge">4 مقررات</span>
+            <button type="button" class="section-toggle-btn" data-action="toggle-section" data-target="courses">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+    </div>
+    
+    <div class="section-body">
+        <div class="section-inner">
+            <div class="data-table-wrapper">
+                <table class="data-table" id="courses-table">
+                    <thead>
+                        <tr>
+                            <th>المقرر</th>
+                            <th style="text-align: center;">المشرف</th>
+                            <th style="text-align: center;">القسم</th>
+                            <th style="text-align: center;">الوقت</th>
+                            <th style="text-align: center;">العيادة</th>
+                            <th style="text-align: center;">الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="courses-tbody">
+                        <!-- يتم ملؤه بالJavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="table-footer">
+                <span class="pagination-info" id="courses-pagination-info">عرض 1-4 من 8</span>
+                <div class="pagination-btns">
+                    <button type="button" class="page-btn" id="courses-prev" data-page="courses" data-direction="prev">
+                        <i class="fas fa-chevron-right"></i> السابق
+                    </button>
+                    <button type="button" class="page-btn primary" id="courses-next" data-page="courses" data-direction="next">
+                        التالي <i class="fas fa-chevron-left"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- ========================================== --}}
+{{-- 3. REJECTED CASES - الحالات المرفوضة --}}
+{{-- ========================================== --}}
+<style>
+    .rejected-section .section-icon-box { 
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05)); 
+        color: var(--danger); 
+    }
+    
+    .toolbar {
+        display: flex;
+        gap: var(--space-md);
+        margin-bottom: var(--space-md);
+        flex-wrap: wrap;
+    }
+    .search-box { position: relative; flex: 1; min-width: 200px; }
+    .search-input {
+        width: 100%;
+        padding: var(--space-sm) var(--space-md);
+        padding-left: calc(var(--space-xl) + var(--space-sm));
+        border: 1.5px solid var(--gray-200);
+        border-radius: var(--radius-sm);
+        font-size: var(--text-sm);
+        transition: all 0.2s;
+    }
+    .search-input:focus {
+        border-color: var(--primary);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    .search-btn {
+        position: absolute;
+        left: var(--space-sm);
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--danger);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        width: clamp(24px, 5vw, 28px);
+        height: clamp(24px, 5vw, 28px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: var(--text-xs);
+        pointer-events: auto;
+    }
+    .search-btn i { font-size: var(--icon-sm); }
+    
+    .rejected-table th {
+        background: rgba(239, 68, 68, 0.08) !important;
+    }
+    .rejected-table tr:hover { background: rgba(239, 68, 68, 0.02) !important; }
+    
+    .patient-cell {
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+    }
+    .patient-avatar-sm {
+        width: clamp(24px, 5vw, 28px);
+        height: clamp(24px, 5vw, 28px);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: var(--text-xs);
+        font-weight: 600;
+        flex-shrink: 0;
+    }
+    .patient-info-sm { display: flex; flex-direction: column; }
+    .patient-name-sm { font-weight: 600; font-size: var(--text-sm); color: var(--dark); }
+    .patient-id-sm { font-size: var(--text-xs); color: var(--gray); font-family: 'Tajawal', monospace; }
+    
+    .tooth-badge-sm {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger);
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: var(--text-xs);
+        font-weight: 600;
+        display: inline-block;
+    }
+    
+    .status-change {
+        display: flex;
+        align-items: center;
+        gap: var(--space-xs);
+        font-size: var(--text-xs);
+    }
+    .status-old {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger);
+        padding: 2px 6px;
+        border-radius: 4px;
+        text-decoration: line-through;
+    }
+    .status-arrow { color: var(--gray); font-size: var(--icon-xs); }
+    .status-new {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--secondary);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 600;
+    }
+    
+    .supervisor-cell {
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+    }
+    .supervisor-avatar-sm {
+        width: clamp(20px, 4vw, 24px);
+        height: clamp(20px, 4vw, 24px);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 9px;
+        font-weight: 600;
+    }
+    .supervisor-name-sm { font-size: var(--text-xs); font-weight: 600; }
+    
+    .date-cell { font-size: var(--text-xs); color: var(--gray); white-space: nowrap; }
+    
+    .btn-confirm-sm {
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        color: white;
+        border: none;
+        padding: var(--space-xs) var(--space-sm);
+        border-radius: 6px;
+        font-size: var(--text-xs);
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        transition: all 0.2s;
+        pointer-events: auto;
+    }
+    .btn-confirm-sm:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+    }
+    .btn-confirm-sm:disabled {
+        background: var(--gray-200);
+        color: var(--gray);
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+    .btn-confirm-sm i { font-size: var(--icon-xs); }
+    
+    .request-code-sm {
+        background: rgba(79, 70, 229, 0.1);
+        color: var(--primary);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 600;
+        font-family: 'Tajawal', monospace;
+    }
+</style>
+
+<div class="section-card rejected-section active" id="rejected-section" data-section="rejected">
+    <div class="section-header-bar" data-toggle="rejected">
+        <div class="section-title-group">
+            <div class="section-icon-box">
+                <i class="fas fa-times-circle"></i>
+            </div>
+            <div>
+                <div class="section-title-text">الحالات المرفوضة والمعدلة</div>
+                <div class="section-subtitle-text">سجل التعديلات والموافقات</div>
+            </div>
+        </div>
+        <div class="section-controls">
+            <span class="section-badge" id="rejected-count">3 حالات</span>
+            <button type="button" class="section-toggle-btn" data-action="toggle-section" data-target="rejected">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+    </div>
+    
+    <div class="section-body">
+        <div class="section-inner">
+            <div class="toolbar">
+                <div class="search-box">
+                    <input type="text" class="search-input" id="rejected-search" placeholder="ابحث عن حالة...">
+                    <button type="button" class="search-btn" data-action="search-rejected">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="data-table-wrapper">
+                <table class="data-table rejected-table" id="rejected-table">
+                    <thead>
+                        <tr>
+                            <th>المريض</th>
+                            <th style="text-align: center;">السن</th>
+                            <th style="text-align: center;">التغيير</th>
+                            <th style="text-align: center;">المشرف</th>
+                            <th style="text-align: center;">التاريخ</th>
+                            <th style="text-align: center;">رمز الطلب</th>
+                            <th style="text-align: center;">إجراء</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rejected-tbody">
+                        <!-- يتم ملؤه بالJavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="table-footer">
+                <span class="pagination-info" id="rejected-pagination-info">عرض 1-3 من 3</span>
+                <div class="pagination-btns">
+                    <button type="button" class="page-btn" id="rejected-prev" data-page="rejected" data-direction="prev">
+                        <i class="fas fa-chevron-right"></i> السابق
+                    </button>
+                    <button type="button" class="page-btn primary" id="rejected-next" data-page="rejected" data-direction="next">
+                        التالي <i class="fas fa-chevron-left"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- ========================================== --}}
+{{-- 4. RADIOLOGY FORM - طلب أشعة جديد --}}
+{{-- ========================================== --}}
+<style>
+    .radiology-form-section .section-icon-box { 
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05)); 
+        color: var(--warning); 
+    }
+    
+    .form-group { margin-bottom: var(--space-lg); }
+    .form-label {
+        display: block;
+        font-size: var(--text-sm);
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: var(--space-sm);
+    }
+    
+    .smart-search { position: relative; }
+    .smart-input {
+        width: 100%;
+        padding: var(--space-md);
+        padding-left: calc(var(--space-xl) + var(--space-sm));
+        border: 2px solid var(--gray-200);
+        border-radius: var(--radius);
+        font-size: var(--text-base);
+        transition: all 0.3s;
+        background: white;
+    }
+    .smart-input:focus {
+        border-color: var(--primary);
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    }
+    .smart-icon {
+        position: absolute;
+        left: var(--space-md);
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray);
+        font-size: var(--icon-lg);
+        transition: color 0.3s;
+    }
+    .smart-search:focus-within .smart-icon { color: var(--primary); }
+    
+    .smart-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 2px solid var(--primary);
+        border-top: none;
+        border-radius: 0 0 var(--radius) var(--radius);
+        max-height: 280px;
+        overflow-y: auto;
+        z-index: 1000;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        display: none;
+    }
+    .smart-dropdown.show { display: block; animation: slideDown 0.2s ease; }
+    
+    .smart-item {
+        padding: var(--space-md);
+        cursor: pointer;
+        border-bottom: 1px solid var(--gray-200);
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+    }
+    .smart-item:hover, .smart-item.selected { background: rgba(79, 70, 229, 0.05); }
+    
+    .smart-avatar {
+        width: clamp(28px, 5vw, 32px);
+        height: clamp(28px, 5vw, 32px);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: var(--text-xs);
+        flex-shrink: 0;
+    }
+    .smart-info { flex: 1; text-align: right; }
+    .smart-name { font-size: var(--text-sm); font-weight: 600; color: var(--dark); margin-bottom: 2px; }
+    .smart-meta { font-size: var(--text-xs); color: var(--gray); }
+    .smart-badge {
+        background: rgba(79, 70, 229, 0.1);
+        color: var(--primary);
+        padding: var(--space-xs) var(--space-sm);
+        border-radius: 4px;
+        font-size: var(--text-xs);
+        font-weight: 600;
+    }
+    
+    .selected-card {
+        display: none;
+        margin-top: var(--space-md);
+        padding: var(--space-md);
+        border-radius: var(--radius-sm);
+        border-right: 3px solid;
+    }
+    .selected-card.show { display: block; animation: fadeIn 0.3s ease; }
+    .selected-content { display: flex; align-items: center; gap: var(--space-md); }
+    .selected-avatar {
+        width: clamp(32px, 6vw, 36px);
+        height: clamp(32px, 6vw, 36px);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: var(--text-sm);
+        flex-shrink: 0;
+    }
+    .selected-info { flex: 1; }
+    .selected-name { font-weight: 600; color: var(--dark); font-size: var(--text-sm); margin-bottom: 2px; }
+    .selected-meta { font-size: var(--text-xs); color: var(--gray); }
+    .selected-remove {
+        background: none;
+        border: none;
+        color: var(--danger);
+        cursor: pointer;
+        padding: var(--space-sm);
+        font-size: var(--icon-lg);
+        transition: transform 0.2s;
+        pointer-events: auto;
+    }
+    .selected-remove:hover { transform: scale(1.1); }
+    
+    .custom-select { position: relative; }
+    .select-trigger {
+        width: 100%;
+        padding: var(--space-md);
+        border: 2px solid var(--gray-200);
+        border-radius: var(--radius);
+        background: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: var(--text-base);
+        color: var(--gray);
+    }
+    .custom-select.active .select-trigger {
+        border-color: var(--primary);
+        border-bottom-color: transparent;
+        border-radius: var(--radius) var(--radius) 0 0;
+    }
+    .select-trigger:hover { border-color: var(--primary); }
+    .select-options {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 2px solid var(--primary);
+        border-top: none;
+        border-radius: 0 0 var(--radius) var(--radius);
+        max-height: 250px;
+        overflow-y: auto;
+        z-index: 100;
+    }
+    .custom-select.active .select-options { display: block; animation: slideDown 0.2s ease; }
+    .select-option {
+        padding: var(--space-md);
+        cursor: pointer;
+        border-bottom: 1px solid var(--gray-200);
+        font-size: var(--text-sm);
+        transition: background 0.2s;
+    }
+    .select-option:hover { background: rgba(79, 70, 229, 0.05); }
+    
+    .form-textarea {
+        width: 100%;
+        padding: var(--space-md);
+        border: 2px solid var(--gray-200);
+        border-radius: var(--radius);
+        font-size: var(--text-base);
+        resize: vertical;
+        min-height: 80px;
+        font-family: 'Tajawal', 'Cairo', sans-serif;
+        transition: all 0.3s;
+    }
+    .form-textarea:focus {
+        border-color: var(--primary);
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: var(--space-md);
+        flex-wrap: wrap;
+    }
+    .btn-primary {
+        flex: 1;
+        min-width: 140px;
+        padding: var(--space-md) var(--space-lg);
+        border-radius: var(--radius);
+        font-weight: 600;
+        font-size: var(--text-base);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-sm);
+        transition: all 0.3s;
+        border: none;
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        color: white;
+        box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+        pointer-events: auto;
+    }
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+    }
+    .btn-primary i { font-size: var(--icon-base); }
+    .btn-secondary {
+        flex: 1;
+        min-width: 140px;
+        padding: var(--space-md) var(--space-lg);
+        border-radius: var(--radius);
+        font-weight: 600;
+        font-size: var(--text-base);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-sm);
+        transition: all 0.3s;
+        border: none;
+        background: var(--gray-light);
+        color: var(--dark);
+        pointer-events: auto;
+    }
+    .btn-secondary:hover { background: var(--gray-200); }
+    .btn-secondary i { font-size: var(--icon-base); }
+    
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+</style>
+
+<div class="section-card radiology-form-section active" id="radiology-form-section" data-section="radiology-form">
+    <div class="section-header-bar" data-toggle="radiology-form">
+        <div class="section-title-group">
+            <div class="section-icon-box">
+                <i class="fas fa-plus-circle"></i>
+            </div>
+            <div>
+                <div class="section-title-text">طلب أشعة جديد</div>
+                <div class="section-subtitle-text">طلب تصوير للمريض</div>
+            </div>
+        </div>
+        <div class="section-controls">
+            <span class="section-badge">نموذج</span>
+            <button type="button" class="section-toggle-btn" data-action="toggle-section" data-target="radiology-form">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+    </div>
+    
+    <div class="section-body">
+        <div class="section-inner">
+            {{-- البحث عن المريض --}}
+            <div class="form-group">
+                <label class="form-label">
+                    اختيار المريض <span style="color: var(--danger);">*</span>
+                </label>
+                <div class="smart-search" id="patient-search">
+                    <input type="text" 
+                           class="smart-input" 
+                           id="patient-input"
+                           placeholder="ابحث عن المريض..."
+                           autocomplete="off">
+                    <i class="fas fa-search smart-icon" id="patient-search-icon"></i>
+                    <div class="smart-dropdown" id="patient-dropdown"></div>
+                </div>
+                <div class="selected-card" id="patient-selected" style="background: rgba(16, 185, 129, 0.05); border-color: var(--secondary);">
+                    <div class="selected-content">
+                        <div class="selected-avatar" style="background: linear-gradient(135deg, var(--secondary), #059669);">
+                            <i class="fas fa-user-injured"></i>
+                        </div>
+                        <div class="selected-info">
+                            <div class="selected-name" id="patient-sel-name"></div>
+                            <div class="selected-meta" id="patient-sel-meta"></div>
+                        </div>
+                        <button type="button" class="selected-remove" data-action="clear-patient" title="إزالة الاختيار">
+                            <i class="fas fa-times-circle"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {{-- سبب الطلب --}}
+            <div class="form-group">
+                <label class="form-label">
+                    سبب الطلب <span style="color: var(--danger);">*</span>
+                </label>
+                <div class="custom-select" id="reason-select">
+                    <div class="select-trigger" data-action="toggle-select" data-target="reason-select">
+                        <span id="reason-text" style="color: var(--gray);">اختر السبب...</span>
+                        <i class="fas fa-chevron-down" style="font-size: var(--icon-sm); transition: transform 0.3s;"></i>
+                    </div>
+                    <div class="select-options">
+                        <div class="select-option" data-reason="no_image" data-text="السجل ليس به صورة للمريض">السجل ليس به صورة للمريض</div>
+                        <div class="select-option" data-reason="follow_up" data-text="متابعة حالة سابقة">متابعة حالة سابقة</div>
+                        <div class="select-option" data-reason="diagnosis" data-text="تأكيد تشخيص">تأكيد تشخيص</div>
+                        <div class="select-option" data-reason="emergency" data-text="حالة طارئة">حالة طارئة</div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- ملاحظات --}}
+            <div class="form-group">
+                <label class="form-label">ملاحظات إضافية (اختياري)</label>
+                <textarea class="form-textarea" id="notes" placeholder="أي معلومات إضافية..."></textarea>
+            </div>
+
+            {{-- أزرار --}}
+            <div class="form-actions">
+                <button type="button" class="btn-primary" data-action="submit-form">
+                    <i class="fas fa-paper-plane"></i> إرسال الطلب
+                </button>
+                <button type="button" class="btn-secondary" data-action="clear-form">
+                    <i class="fas fa-eraser"></i> مسح النموذج
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- ========================================== --}}
+{{-- 5. RADIOLOGY LIST - سجل طلبات الأشعة --}}
+{{-- ========================================== --}}
+<style>
+    .radiology-list-section .section-icon-box { 
+        background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(79, 70, 229, 0.05)); 
+        color: var(--primary); 
+    }
+    
+    /* حالات: معلق، قيد التنفيذ، تمت، ملغى */
+    .status-pill {
+        padding: var(--space-xs) var(--space-sm);
+        border-radius: 12px;
+        font-size: var(--text-xs);
+        font-weight: 600;
+        display: inline-block;
+        white-space: nowrap;
+    }
+    .status-pending { background: rgba(79, 70, 229, 0.1); color: var(--primary); }
+    .status-progress { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+    .status-done { background: rgba(16, 185, 129, 0.1); color: var(--secondary); }
+    .status-cancelled { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+    
+    /* تنسيقات خاصة لجدول الأشعة */
+    .radiology-table th {
+        background: rgba(79, 70, 229, 0.08) !important;
+    }
+    .radiology-table tr:hover { background: rgba(79, 70, 229, 0.02) !important; }
+    
+    .patient-name-cell {
+        font-weight: 600;
+        font-size: var(--text-sm);
+        color: var(--dark);
+    }
+    .patient-record {
+        font-size: var(--text-xs);
+        color: var(--gray);
+        font-family: 'Tajawal', monospace;
+        margin-top: 2px;
+    }
+    
+    .request-reason {
+        font-size: var(--text-xs);
+        color: var(--gray);
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    /* أزرار الإجراءات - معدلة لتعمل بشكل صحيح */
+    .btn-cancel-action {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger);
+        border: 1.5px solid var(--danger);
+        padding: var(--space-xs) var(--space-sm);
+        border-radius: 6px;
+        font-size: var(--text-xs);
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        transition: all 0.2s;
+        white-space: nowrap;
+        pointer-events: auto;
+    }
+    .btn-cancel-action:hover {
+        background: var(--danger);
+        color: white;
+    }
+    .btn-cancel-action:active {
+        transform: scale(0.95);
+    }
+    
+    .btn-disabled-action {
+        background: var(--gray-200);
+        color: var(--gray);
+        border: 1.5px solid var(--gray-200);
+        padding: var(--space-xs) var(--space-sm);
+        border-radius: 6px;
+        font-size: var(--text-xs);
+        font-weight: 600;
+        cursor: not-allowed;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        white-space: nowrap;
+        opacity: 0.7;
+    }
+    
+    .action-btns-cell {
+        display: flex;
+        gap: var(--space-xs);
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    
+    /* البحث الذكي لطلبات الأشعة */
+    .radiology-search-container {
+        position: relative;
+        flex: 1;
+        min-width: 250px;
+    }
+    .radiology-search-input {
+        width: 100%;
+        padding: var(--space-sm) var(--space-md);
+        padding-left: calc(var(--space-xl) + var(--space-sm));
+        border: 2px solid var(--gray-200);
+        border-radius: var(--radius);
+        font-size: var(--text-sm);
+        transition: all 0.3s;
+        background: white;
+    }
+    .radiology-search-input:focus {
+        border-color: var(--primary);
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    }
+    .radiology-search-icon {
+        position: absolute;
+        left: var(--space-md);
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray);
+        font-size: var(--icon-base);
+        transition: color 0.3s;
+    }
+    .radiology-search-container:focus-within .radiology-search-icon { color: var(--primary); }
+    
+    .radiology-search-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 2px solid var(--primary);
+        border-top: none;
+        border-radius: 0 0 var(--radius) var(--radius);
+        max-height: 280px;
+        overflow-y: auto;
+        z-index: 1000;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        display: none;
+    }
+    .radiology-search-dropdown.show { display: block; animation: slideDown 0.2s ease; }
+    
+    .radiology-search-item {
+        padding: var(--space-md);
+        cursor: pointer;
+        border-bottom: 1px solid var(--gray-200);
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+    }
+    .radiology-search-item:hover, .radiology-search-item.selected { background: rgba(79, 70, 229, 0.05); }
+    
+    .radiology-search-avatar {
+        width: clamp(28px, 5vw, 32px);
+        height: clamp(28px, 5vw, 32px);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: var(--text-xs);
+        flex-shrink: 0;
+    }
+    .radiology-search-info { flex: 1; text-align: right; }
+    .radiology-search-name { font-size: var(--text-sm); font-weight: 600; color: var(--dark); margin-bottom: 2px; }
+    .radiology-search-meta { font-size: var(--text-xs); color: var(--gray); }
+    .radiology-search-status {
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 10px;
+        font-weight: 600;
+    }
+    
+    /* تنسيقات للطلب الملغى */
+    .cancelled-info {
+        font-size: var(--text-xs);
+        color: var(--danger);
+        margin-top: 4px;
+        padding: 4px 8px;
+        background: rgba(239, 68, 68, 0.05);
+        border-radius: 4px;
+        border-right: 2px solid var(--danger);
+    }
+    .cancelled-reason {
+        font-weight: 600;
+    }
+</style>
+
+<div class="section-card radiology-list-section active" id="radiology-list-section" data-section="radiology-list">
+    <div class="section-header-bar" data-toggle="radiology-list">
+        <div class="section-title-group">
+            <div class="section-icon-box">
+                <i class="fas fa-x-ray"></i>
+            </div>
+            <div>
+                <div class="section-title-text">سجل طلبات الأشعة</div>
+                <div class="section-subtitle-text">طلبات مكتب الاستقبال</div>
+            </div>
+        </div>
+        <div class="section-controls">
+            <span class="section-badge" id="radiology-count">8 طلبات</span>
+            <button type="button" class="section-toggle-btn" data-action="toggle-section" data-target="radiology-list">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+    </div>
+    
+    <div class="section-body">
+        <div class="section-inner">
+            {{-- البحث الذكي --}}
+            <div class="toolbar">
+                <div class="radiology-search-container">
+                    <input type="text" 
+                           class="radiology-search-input" 
+                           id="radiology-search-input"
+                           placeholder="ابحث عن مريض، رقم السجل، أو السبب..."
+                           autocomplete="off">
+                    <i class="fas fa-search radiology-search-icon"></i>
+                    <div class="radiology-search-dropdown" id="radiology-search-dropdown"></div>
+                </div>
+            </div>
+            
+            <div class="data-table-wrapper">
+                <table class="data-table radiology-table" id="radiology-table">
+                    <thead>
+                        <tr>
+                            <th>المريض</th>
+                            <th style="text-align: center;">سبب الطلب</th>
+                            <th style="text-align: center;">تاريخ الطلب</th>
+                            <th style="text-align: center;">الحالة</th>
+                            <th style="text-align: center;">إجراء</th>
+                        </tr>
+                    </thead>
+                    <tbody id="radiology-tbody">
+                        <!-- يتم ملؤه بالJavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="table-footer">
+                <span class="pagination-info" id="radiology-pagination-info">عرض 1-4 من 8</span>
+                <div class="pagination-btns">
+                    <button type="button" class="page-btn" id="radiology-prev" data-page="radiology" data-direction="prev">
+                        <i class="fas fa-chevron-right"></i> السابق
+                    </button>
+                    <button type="button" class="page-btn primary" id="radiology-next" data-page="radiology" data-direction="next">
+                        التالي <i class="fas fa-chevron-left"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- ========================================== --}}
+{{-- MODAL OVERLAY - نافذة التأكيد --}}
+{{-- ========================================== --}}
+<div id="modal-overlay" class="modal-overlay">
+    <div class="modal-content" id="modal-content">
+        <!-- يتم ملؤه ديناميكياً -->
+    </div>
+</div>
+
+<style>
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: var(--space-md);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+    .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+        display: flex;
+    }
+    .modal-content {
+        background: white;
+        border-radius: var(--radius-lg);
+        max-width: 450px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        transform: translateY(30px) scale(0.95);
+        transition: all 0.3s ease;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        pointer-events: auto;
+    }
+    .modal-overlay.active .modal-content {
+        transform: translateY(0) scale(1);
+    }
+    .modal-header {
+        padding: var(--space-lg);
+        border-bottom: 1px solid var(--gray-200);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .modal-title {
+        font-size: var(--text-lg);
+        font-weight: 700;
+        color: var(--dark);
+    }
+    .modal-close {
+        background: none;
+        border: none;
+        color: var(--gray);
+        font-size: var(--icon-lg);
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        pointer-events: auto;
+    }
+    .modal-close:hover {
+        background: var(--gray-light);
+        color: var(--dark);
+    }
+    .modal-body {
+        padding: var(--space-lg);
+    }
+    .modal-footer {
+        padding: var(--space-lg);
+        border-top: 1px solid var(--gray-200);
+        display: flex;
+        gap: var(--space-md);
+        justify-content: flex-end;
+    }
+    .modal-btn {
+        padding: var(--space-sm) var(--space-lg);
+        border-radius: var(--radius);
+        font-weight: 600;
+        font-size: var(--text-sm);
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-xs);
+        pointer-events: auto;
+    }
+    .modal-btn-secondary {
+        background: var(--gray-light);
+        color: var(--dark);
+    }
+    .modal-btn-secondary:hover { background: var(--gray-200); }
+    .modal-btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        color: white;
+    }
+    .modal-btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+    .modal-btn-danger {
+        background: linear-gradient(135deg, var(--danger), #dc2626);
+        color: white;
+    }
+    .modal-btn-danger:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+    .modal-btn-success {
+        background: linear-gradient(135deg, var(--secondary), #059669);
+        color: white;
+    }
+    .modal-btn-success:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    
+    /* نمط معلومات داخل المودال */
+    .modal-info-box {
+        background: var(--gray-light);
+        padding: var(--space-md);
+        border-radius: var(--radius);
+        margin-bottom: var(--space-lg);
+    }
+    .modal-info-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: var(--space-sm);
+        font-size: var(--text-sm);
+    }
+    .modal-info-row:last-child { margin-bottom: 0; }
+    .modal-info-label { color: var(--gray); font-weight: 500; }
+    .modal-info-value { color: var(--dark); font-weight: 600; }
+    
+    /* نمط النجاح */
+    .modal-success-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto var(--space-lg);
+        font-size: 40px;
+        color: var(--secondary);
+    }
+    .modal-success-title {
+        text-align: center;
+        color: var(--dark);
+        font-size: var(--text-xl);
+        font-weight: 700;
+        margin-bottom: var(--space-sm);
+    }
+    .modal-success-text {
+        text-align: center;
+        color: var(--gray);
+        font-size: var(--text-sm);
+        margin-bottom: var(--space-lg);
+    }
+</style>
+
+{{-- ========================================== --}}
+{{-- NOTIFICATION TOAST - محسن --}}
+{{-- ========================================== --}}
+<div id="notification-container" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; pointer-events: none;"></div>
+
+<style>
+    .notification-toast {
+        background: white;
+        border-radius: var(--radius);
+        padding: var(--space-md) var(--space-lg);
+        margin-bottom: var(--space-sm);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+        min-width: 320px;
+        max-width: 90vw;
+        animation: notificationSlideIn 0.3s ease;
+        pointer-events: auto;
+        border-right: 4px solid;
+        position: relative;
+        overflow: hidden;
+        font-family: 'Tajawal', 'Cairo', sans-serif;
+    }
+    .notification-toast.hiding {
+        animation: notificationSlideOut 0.3s ease forwards;
+    }
+    .notification-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: var(--icon-lg);
+        flex-shrink: 0;
+    }
+    .notification-content { flex: 1; }
+    .notification-title {
+        font-weight: 700;
+        font-size: var(--text-sm);
+        color: var(--dark);
+        margin-bottom: 3px;
+    }
+    .notification-message {
+        font-size: var(--text-xs);
+        color: var(--gray);
+        line-height: 1.4;
+    }
+    .notification-close {
+        background: none;
+        border: none;
+        color: var(--gray);
+        cursor: pointer;
+        font-size: var(--icon-sm);
+        padding: var(--space-xs);
+        transition: color 0.2s;
+        pointer-events: auto;
+    }
+    .notification-close:hover { color: var(--dark); }
+    
+    /* شريط التقدم */
+    .notification-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        background: currentColor;
+        opacity: 0.3;
+        animation: notificationProgress 4s linear forwards;
+    }
+    
+    /* أنواع الإشعارات */
+    .notification-success { border-color: var(--secondary); }
+    .notification-success .notification-icon { background: rgba(16, 185, 129, 0.1); color: var(--secondary); }
+    .notification-success .notification-progress { background: var(--secondary); }
+    
+    .notification-error { border-color: var(--danger); }
+    .notification-error .notification-icon { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+    .notification-error .notification-progress { background: var(--danger); }
+    
+    .notification-warning { border-color: var(--warning); }
+    .notification-warning .notification-icon { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+    .notification-warning .notification-progress { background: var(--warning); }
+    
+    .notification-info { border-color: var(--primary); }
+    .notification-info .notification-icon { background: rgba(79, 70, 229, 0.1); color: var(--primary); }
+    .notification-info .notification-progress { background: var(--primary); }
+    
+    @keyframes notificationSlideIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes notificationSlideOut {
+        from { opacity: 1; transform: translateY(0); }
+        to { opacity: 0; transform: translateY(-20px); }
+    }
+    @keyframes notificationProgress {
+        from { width: 100%; }
+        to { width: 0%; }
+    }
+</style>
+
+{{-- ========================================== --}}
+{{-- JAVASCRIPT - معدل بالكامل بدون onclick --}}
+{{-- ========================================== --}}
+<script>
+// ==========================================
+// بيانات البحث والجداول
+// ==========================================
+const patientsData = [
+    { id: 1, name: 'خالد العلي', record: 'MED-2024-001', age: 45, type: 'فحص روتيني', color: 'var(--primary)' },
+    { id: 2, name: 'فاطمة حسن', record: 'MED-2024-002', age: 32, type: 'ألم أسنان', color: 'var(--secondary)' },
+    { id: 3, name: 'عمر النجار', record: 'MED-2024-003', age: 58, type: 'تيجان', color: 'var(--accent)' },
+    { id: 4, name: 'ليلى أحمد', record: 'MED-2024-004', age: 28, type: 'تقويم', color: 'var(--warning)' },
+    { id: 5, name: 'يوسف محمود', record: 'MED-2024-005', age: 52, type: 'قلع', color: 'var(--danger)' }
+];
+
+const allCourses = [
+    { id: 'cardiology', title: 'طب القلب السريري المتقدم', doctor: 'د. أحمد النجار', dept: 'أمراض القلب', time: 'السبت 8:00 - 12:00', clinic: 'العيادة 10', status: 'نشط', statusColor: 'var(--primary)' },
+    { id: 'respiratory', title: 'أمراض الجهاز التنفسي', doctor: 'د. سارة عبدالله', dept: 'الأمراض الصدرية', time: 'الأحد 9:00 - 13:00', clinic: 'العيادة 7', status: 'جاري', statusColor: 'var(--secondary)' },
+    { id: 'neurology', title: 'طب الأعصاب السريري', doctor: 'د. خالد محمود', dept: 'الأمراض العصبية', time: 'الثلاثاء 10:00 - 14:00', clinic: 'العيادة 15', status: 'جاري', statusColor: 'var(--accent)' },
+    { id: 'clinical', title: 'الفحص السريري المتقدم', doctor: 'د. لينا حسن', dept: 'المهارات السريرية', time: 'الأربعاء 8:00 - 11:00', clinic: 'معمل المهارات 3', status: 'مكتمل', statusColor: 'var(--warning)' },
+    { id: 'surgery', title: 'الجراحة العامة', doctor: 'د. محمد علي', dept: 'الجراحة', time: 'الخميس 9:00 - 13:00', clinic: 'غرفة العمليات 2', status: 'نشط', statusColor: 'var(--primary)' },
+    { id: 'pediatrics', title: 'طب الأطفال', doctor: 'د. فاطمة أحمد', dept: 'الأطفال', time: 'السبت 10:00 - 14:00', clinic: 'العيادة 5', status: 'جاري', statusColor: 'var(--secondary)' },
+    { id: 'dermatology', title: 'الأمراض الجلدية', doctor: 'د. ليلى خالد', dept: 'الجلدية', time: 'الأحد 11:00 - 15:00', clinic: 'العيادة 8', status: 'مكتمل', statusColor: 'var(--warning)' },
+    { id: 'orthopedics', title: 'جراحة العظام', doctor: 'د. عمر حسن', dept: 'العظام', time: 'الاثنين 8:00 - 12:00', clinic: 'العيادة 12', status: 'نشط', statusColor: 'var(--primary)' }
+];
+
+let allRejectedCases = [
+    {
+        id: 'CASE-2024-001',
+        name: 'أحمد محمد علي',
+        age: 45,
+        tooth: 'سن 16',
+        color: 'var(--danger)',
+        old_status: 'حشو',
+        new_status: 'قلع',
+        supervisor: 'د. سامر علي',
+        supervisor_color: 'var(--primary)',
+        date: '٢٠٢٤-٠١-١٥',
+        time: '14:30',
+        request_code: 'REQ-2024-0089',
+        confirmed: false
+    },
+    {
+        id: 'CASE-2024-002',
+        name: 'سارة خالد حسن',
+        age: 32,
+        tooth: 'سن 8',
+        color: '#ec4899',
+        old_status: 'حشو تجميلي',
+        new_status: 'تيجان',
+        supervisor: 'د. ليلى أحمد',
+        supervisor_color: '#ec4899',
+        date: '٢٠٢٤-٠١-١٤',
+        time: '11:15',
+        request_code: 'REQ-2024-0085',
+        confirmed: false
+    },
+    {
+        id: 'CASE-2024-003',
+        name: 'محمد عمر النجار',
+        age: 58,
+        tooth: 'سن 30',
+        color: '#8b5cf6',
+        old_status: 'استئصال لب',
+        new_status: 'علاج جذور',
+        supervisor: 'د. محمد حسن',
+        supervisor_color: '#8b5cf6',
+        date: '٢٠٢٤-٠١-١٢',
+        time: '16:00',
+        request_code: 'REQ-2024-0082',
+        confirmed: true
+    },
+    {
+        id: 'CASE-2024-004',
+        name: 'فاطمة علي أحمد',
+        age: 35,
+        tooth: 'سن 16',
+        color: 'var(--warning)',
+        old_status: 'ترميم',
+        new_status: 'تيجان',
+        supervisor: 'د. سارة خالد',
+        supervisor_color: 'var(--secondary)',
+        date: '٢٠٢٤-٠١-١٠',
+        time: '09:00',
+        request_code: 'REQ-2024-0079',
+        confirmed: false
+    },
+    {
+        id: 'CASE-2024-005',
+        name: 'خالد يوسف محمود',
+        age: 42,
+        tooth: 'سن 22',
+        color: 'var(--primary)',
+        old_status: 'حشو عادي',
+        new_status: 'حشو عصب',
+        supervisor: 'د. أحمد النجار',
+        supervisor_color: 'var(--primary)',
+        date: '٢٠٢٤-٠١-٠٨',
+        time: '13:45',
+        request_code: 'REQ-2024-0075',
+        confirmed: false
+    }
+];
+
+let allRadiologyRequests = [
+    { id: 1, patient: 'خالد العلي', record: 'MED-2024-001', reason: 'السجل ليس به صورة للمريض', date: '٢٠٢٤-٠١-١٥', time: '10:30', status: 'معلق', statusClass: 'status-pending', confirmed: false, confirmation_date: null, confirmation_time: null, supervisor: 'د. سامر علي', cancelled: false, cancel_reason: null, cancel_date: null, cancel_time: null },
+    { id: 2, patient: 'فاطمة حسن', record: 'MED-2024-002', reason: 'متابعة حالة سابقة', date: '٢٠٢٤-٠١-١٤', time: '14:15', status: 'تمت', statusClass: 'status-done', confirmed: true, confirmation_date: '٢٠٢٤-٠١-١٤', confirmation_time: '16:45', supervisor: 'د. ليلى أحمد', cancelled: false, cancel_reason: null, cancel_date: null, cancel_time: null },
+    { id: 3, patient: 'عمر النجار', record: 'MED-2024-003', reason: 'تأكيد تشخيص', date: '٢٠٢٤-٠١-١٣', time: '09:00', status: 'قيد التنفيذ', statusClass: 'status-progress', confirmed: false, confirmation_date: null, confirmation_time: null, supervisor: 'د. محمد حسن', cancelled: false, cancel_reason: null, cancel_date: null, cancel_time: null },
+    { id: 4, patient: 'ليلى أحمد', record: 'MED-2024-004', reason: 'حالة طارئة', date: '٢٠٢٤-٠١-١٢', time: '11:30', status: 'تمت', statusClass: 'status-done', confirmed: true, confirmation_date: '٢٠٢٤-٠١-١٢', confirmation_time: '13:20', supervisor: 'د. سارة عبدالله', cancelled: false, cancel_reason: null, cancel_date: null, cancel_time: null },
+    { id: 5, patient: 'يوسف محمود', record: 'MED-2024-005', reason: 'السجل ليس به صورة للمريض', date: '٢٠٢٤-٠١-١١', time: '15:45', status: 'معلق', statusClass: 'status-pending', confirmed: false, confirmation_date: null, confirmation_time: null, supervisor: 'د. خالد محمود', cancelled: false, cancel_reason: null, cancel_date: null, cancel_time: null },
+    { id: 6, patient: 'أحمد علي', record: 'MED-2024-006', reason: 'متابعة حالة سابقة', date: '٢٠٢٤-٠١-١٠', time: '08:20', status: 'معلق', statusClass: 'status-pending', confirmed: false, confirmation_date: null, confirmation_time: null, supervisor: 'د. لينا حسن', cancelled: false, cancel_reason: null, cancel_date: null, cancel_time: null },
+    { id: 7, patient: 'سارة خالد', record: 'MED-2024-007', reason: 'تأكيد تشخيص', date: '٢٠٢٤-٠١-٠٩', time: '13:10', status: 'قيد التنفيذ', statusClass: 'status-progress', confirmed: false, confirmation_date: null, confirmation_time: null, supervisor: 'د. أحمد النجار', cancelled: false, cancel_reason: null, cancel_date: null, cancel_time: null },
+    { id: 8, patient: 'محمد عمر', record: 'MED-2024-008', reason: 'حالة طارئة', date: '٢٠٢٤-٠١-٠٨', time: '10:00', status: 'تمت', statusClass: 'status-done', confirmed: true, confirmation_date: '٢٠٢٤-٠١-٠٨', confirmation_time: '11:30', supervisor: 'د. فاطمة أحمد', cancelled: false, cancel_reason: null, cancel_date: null, cancel_time: null }
+];
+
+let selectedPatient = null;
+let currentFocus = { patient: -1, radiology: -1 };
+let radiologySearchResults = [];
+
+const paginationConfig = {
+    courses: { currentPage: 1, perPage: 4, total: allCourses.length },
+    rejected: { currentPage: 1, perPage: 3, total: allRejectedCases.length },
+    radiology: { currentPage: 1, perPage: 4, total: allRadiologyRequests.length }
+};
+
+// ==========================================
+// إدارة الأقسام - بدون onclick
+// ==========================================
+function toggleSection(sectionId) {
+    const section = document.getElementById(sectionId + '-section');
+    if (section) {
+        section.classList.toggle('active');
+    }
+}
+
+// ==========================================
+// البحث الذكي - المرضى
+// ==========================================
+function searchPatients(query) {
+    const dropdown = document.getElementById('patient-dropdown');
+    currentFocus.patient = -1;
+    
+    if (!query) {
+        dropdown.classList.remove('show');
+        return;
+    }
+    
+    const matches = patientsData.filter(p => p.name.includes(query) || p.record.toLowerCase().includes(query.toLowerCase()));
+    
+    if (matches.length === 0) {
+        dropdown.innerHTML = '<div style="padding: var(--space-md); text-align: center; color: var(--gray); font-size: var(--text-sm);">لا توجد نتائج</div>';
+    } else {
+        dropdown.innerHTML = matches.map((p, index) => `
+            <div class="smart-item" data-patient-id="${p.id}" data-index="${index}">
+                <div class="smart-avatar" style="background: linear-gradient(135deg, ${p.color}, ${p.color}dd);"><i class="fas fa-user"></i></div>
+                <div class="smart-info">
+                    <div class="smart-name">${highlightText(p.name, query)}</div>
+                    <div class="smart-meta">${highlightText(p.record, query)} • ${p.age} سنة • ${p.type}</div>
+                </div>
+                <span class="smart-badge">اختر</span>
+            </div>
+        `).join('');
+        
+        // إضافة event listeners للعناصر الديناميكية
+        dropdown.querySelectorAll('.smart-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const patientId = parseInt(this.getAttribute('data-patient-id'));
+                selectPatient(patientId);
+            });
+        });
+    }
+    
+    dropdown.classList.add('show');
+}
+
+function selectPatient(patientId) {
+    const patient = patientsData.find(p => p.id === patientId);
+    if (!patient) return;
+    
+    selectedPatient = patient;
+    
+    document.getElementById('patient-input').style.display = 'none';
+    document.getElementById('patient-search-icon').style.display = 'none';
+    
+    document.getElementById('patient-selected').classList.add('show');
+    document.getElementById('patient-sel-name').textContent = patient.name;
+    document.getElementById('patient-sel-meta').innerHTML = `${patient.record} • ${patient.age} سنة • ${patient.type}`;
+    
+    hideDropdown('patient');
+}
+
+function clearPatient() {
+    selectedPatient = null;
+    
+    document.getElementById('patient-input').style.display = 'block';
+    document.getElementById('patient-input').value = '';
+    document.getElementById('patient-search-icon').style.display = 'block';
+    
+    document.getElementById('patient-selected').classList.remove('show');
+    document.getElementById('patient-input').focus();
+}
+
+// ==========================================
+// البحث الذكي - طلبات الأشعة
+// ==========================================
+function searchRadiologyRequests(query) {
+    const dropdown = document.getElementById('radiology-search-dropdown');
+    currentFocus.radiology = -1;
+    
+    if (!query) {
+        dropdown.classList.remove('show');
+        paginationConfig.radiology.filteredData = null;
+        paginationConfig.radiology.currentPage = 1;
+        renderTable('radiology');
+        return;
+    }
+    
+    radiologySearchResults = allRadiologyRequests.filter(r => 
+        r.patient.includes(query) || 
+        r.record.toLowerCase().includes(query.toLowerCase()) ||
+        r.reason.includes(query) ||
+        r.status.includes(query)
+    );
+    
+    if (radiologySearchResults.length === 0) {
+        dropdown.innerHTML = '<div style="padding: var(--space-md); text-align: center; color: var(--gray); font-size: var(--text-sm);">لا توجد نتائج</div>';
+    } else {
+        dropdown.innerHTML = radiologySearchResults.map((r, index) => {
+            const statusColors = {
+                'معلق': 'var(--primary)',
+                'قيد التنفيذ': 'var(--warning)',
+                'تمت': 'var(--secondary)',
+                'ملغى': 'var(--danger)'
+            };
+            return `
+            <div class="radiology-search-item" data-request-id="${r.id}" data-index="${index}">
+                <div class="radiology-search-avatar" style="background: ${statusColors[r.status] || 'var(--gray)'};">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="radiology-search-info">
+                    <div class="radiology-search-name">${highlightText(r.patient, query)}</div>
+                    <div class="radiology-search-meta">${highlightText(r.record, query)} • ${r.reason}</div>
+                </div>
+                <span class="radiology-search-status" style="background: ${statusColors[r.status]}20; color: ${statusColors[r.status]};">${r.status}</span>
+            </div>
+        `}).join('');
+        
+        // إضافة event listeners للعناصر الديناميكية
+        dropdown.querySelectorAll('.radiology-search-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const requestId = parseInt(this.getAttribute('data-request-id'));
+                selectRadiologySearch(requestId);
+            });
+        });
+    }
+    
+    dropdown.classList.add('show');
+}
+
+function selectRadiologySearch(requestId) {
+    const request = allRadiologyRequests.find(r => r.id === requestId);
+    if (!request) return;
+    
+    paginationConfig.radiology.filteredData = [request];
+    paginationConfig.radiology.currentPage = 1;
+    renderTable('radiology');
+    
+    document.getElementById('radiology-search-input').value = request.patient;
+    hideRadiologySearch();
+}
+
+function navigateRadiologySearch(event) {
+    const dropdown = document.getElementById('radiology-search-dropdown');
+    const items = dropdown.querySelectorAll('.radiology-search-item');
+    
+    if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        currentFocus.radiology++;
+        if (currentFocus.radiology >= items.length) currentFocus.radiology = 0;
+        updateRadiologySearchFocus(items);
+    } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        currentFocus.radiology--;
+        if (currentFocus.radiology < 0) currentFocus.radiology = items.length - 1;
+        updateRadiologySearchFocus(items);
+    } else if (event.key === 'Enter') {
+        event.preventDefault();
+        if (currentFocus.radiology > -1 && items[currentFocus.radiology]) {
+            items[currentFocus.radiology].click();
+        }
+    } else if (event.key === 'Escape') {
+        hideRadiologySearch();
+    }
+}
+
+function updateRadiologySearchFocus(items) {
+    items.forEach((item, index) => {
+        if (index === currentFocus.radiology) {
+            item.classList.add('selected');
+            item.scrollIntoView({ block: 'nearest' });
+        } else {
+            item.classList.remove('selected');
+        }
+    });
+}
+
+function hideRadiologySearch() {
+    document.getElementById('radiology-search-dropdown').classList.remove('show');
+}
+
+function hideRadiologySearchDelayed() {
+    setTimeout(() => hideRadiologySearch(), 200);
+}
+
+// ==========================================
+// مساعدو البحث
+// ==========================================
+function highlightText(text, query) {
+    if (!query) return text;
+    const regex = new RegExp(`(${query})`, 'gi');
+    return text.replace(regex, '<span style="background: rgba(245, 158, 11, 0.3); padding: 0 2px; border-radius: 2px;">$1</span>');
+}
+
+function navigateResults(event, type) {
+    const dropdown = document.getElementById(type + '-dropdown');
+    const items = dropdown.querySelectorAll('.smart-item');
+    
+    if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        currentFocus[type]++;
+        if (currentFocus[type] >= items.length) currentFocus[type] = 0;
+        updateFocus(type, items);
+    } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        currentFocus[type]--;
+        if (currentFocus[type] < 0) currentFocus[type] = items.length - 1;
+        updateFocus(type, items);
+    } else if (event.key === 'Enter') {
+        event.preventDefault();
+        if (currentFocus[type] > -1 && items[currentFocus[type]]) {
+            items[currentFocus[type]].click();
+        }
+    } else if (event.key === 'Escape') {
+        hideDropdown(type);
+    }
+}
+
+function updateFocus(type, items) {
+    items.forEach((item, index) => {
+        if (index === currentFocus[type]) {
+            item.classList.add('selected');
+            item.scrollIntoView({ block: 'nearest' });
+        } else {
+            item.classList.remove('selected');
+        }
+    });
+}
+
+function hideDropdown(type) {
+    document.getElementById(type + '-dropdown').classList.remove('show');
+}
+
+function hideDropdownDelayed(type) {
+    setTimeout(() => hideDropdown(type), 200);
+}
+
+// ==========================================
+// Select مخصص
+// ==========================================
+function toggleSelect(selectId) {
+    const select = document.getElementById(selectId);
+    const isActive = select.classList.contains('active');
+    document.querySelectorAll('.custom-select').forEach(s => s.classList.remove('active'));
+    if (!isActive) select.classList.add('active');
+}
+
+function selectReason(value, text) {
+    document.getElementById('reason-text').textContent = text;
+    document.getElementById('reason-text').style.color = 'var(--dark)';
+    document.getElementById('reason-select').classList.remove('active');
+}
+
+// ==========================================
+// إرسال النموذج
+// ==========================================
+function submitForm() {
+    if (!selectedPatient) {
+        showNotification('يرجى اختيار المريض', 'warning');
+        document.getElementById('patient-input').focus();
+        return;
+    }
+    const reason = document.getElementById('reason-text').textContent;
+    if (reason === 'اختر السبب...') {
+        showNotification('يرجى اختيار سبب الطلب', 'warning');
+        return;
+    }
+    
+    showConfirmModal(
+        'تأكيد إرسال الطلب',
+        `
+        <div class="modal-info-box">
+            <div class="modal-info-row">
+                <span class="modal-info-label">المريض:</span>
+                <span class="modal-info-value">${selectedPatient.name}</span>
+            </div>
+            <div class="modal-info-row">
+                <span class="modal-info-label">رقم السجل:</span>
+                <span class="modal-info-value">${selectedPatient.record}</span>
+            </div>
+            <div class="modal-info-row">
+                <span class="modal-info-label">سبب الطلب:</span>
+                <span class="modal-info-value">${reason}</span>
+            </div>
+        </div>
+        <p style="color: var(--gray); font-size: var(--text-sm);">هل أنت متأكد من إرسال طلب الأشعة؟</p>
+        `,
+        () => {
+            executeSubmit();
+        },
+        'إرسال الطلب',
+        'primary'
+    );
+}
+
+function executeSubmit() {
+    const reason = document.getElementById('reason-text').textContent;
+    
+    const newRequest = {
+        id: allRadiologyRequests.length + 1,
+        patient: selectedPatient.name,
+        record: selectedPatient.record,
+        reason: reason,
+        date: new Date().toLocaleDateString('ar-SA'),
+        time: new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' }),
+        status: 'معلق',
+        statusClass: 'status-pending',
+        confirmed: false,
+        confirmation_date: null,
+        confirmation_time: null,
+        supervisor: 'د. المشرف الحالي',
+        cancelled: false,
+        cancel_reason: null,
+        cancel_date: null,
+        cancel_time: null
+    };
+    
+    allRadiologyRequests.unshift(newRequest);
+    paginationConfig.radiology.total = allRadiologyRequests.length;
+    
+    renderTable('radiology');
+    updateCounts();
+    
+    showSuccessModal(
+        'تم إرسال الطلب بنجاح!',
+        `
+        <div class="modal-info-box" style="background: rgba(16, 185, 129, 0.05); border-right: 3px solid var(--secondary);">
+            <div class="modal-info-row">
+                <span class="modal-info-label">المريض:</span>
+                <span class="modal-info-value">${selectedPatient.name}</span>
+            </div>
+            <div class="modal-info-row">
+                <span class="modal-info-label">السبب:</span>
+                <span class="modal-info-value">${reason}</span>
+            </div>
+            <div class="modal-info-row">
+                <span class="modal-info-label">التاريخ:</span>
+                <span class="modal-info-value">${newRequest.date} ${newRequest.time}</span>
+            </div>
+        </div>
+        `,
+        () => {
+            clearForm();
+        }
+    );
+}
+
+function clearForm() {
+    clearPatient();
+    document.getElementById('reason-text').textContent = 'اختر السبب...';
+    document.getElementById('reason-text').style.color = 'var(--gray)';
+    document.getElementById('notes').value = '';
+}
+
+// ==========================================
+// Pagination - بدون onclick
+// ==========================================
+function renderTable(section) {
+    const config = paginationConfig[section];
+    let dataToRender = [];
+    
+    if (section === 'radiology' && config.filteredData) {
+        dataToRender = config.filteredData;
+    } else {
+        const start = (config.currentPage - 1) * config.perPage;
+        const end = Math.min(start + config.perPage, config.total);
+        dataToRender = getSectionData(section).slice(start, end);
+    }
+    
+    let html = '';
+    
+    if (section === 'courses') {
+        html = dataToRender.map(course => `
+            <tr data-course-id="${course.id}" style="cursor: pointer;">
+                <td>
+                    <div class="course-title">${course.title}</div>
+                    <div class="course-meta">رمز المقرر: ${course.id.toUpperCase().substring(0, 4)}-2024</div>
+                </td>
+                <td style="text-align: center; font-weight: 600;">${course.doctor}</td>
+                <td style="text-align: center;">${course.dept}</td>
+                <td style="text-align: center; color: var(--gray); font-size: var(--text-xs);">${course.time}</td>
+                <td style="text-align: center;">${course.clinic}</td>
+                <td style="text-align: center;">
+                    <span class="status-badge" style="background: ${course.statusColor};">${course.status}</span>
+                </td>
+            </tr>
+        `).join('');
+        document.getElementById('courses-tbody').innerHTML = html;
+        
+        // إضافة event listeners للصفوف
+        document.querySelectorAll('#courses-tbody tr').forEach(row => {
+            row.addEventListener('click', function() {
+                const courseId = this.getAttribute('data-course-id');
+                viewCourse(courseId);
+            });
+        });
+        
+    } else if (section === 'rejected') {
+        html = dataToRender.map((caseItem) => `
+            <tr>
+                <td>
+                    <div class="patient-cell">
+                        <div class="patient-avatar-sm" style="background: linear-gradient(135deg, ${caseItem.color}, ${caseItem.color}dd);">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="patient-info-sm">
+                            <span class="patient-name-sm">${caseItem.name}</span>
+                            <span class="patient-id-sm">${caseItem.id}</span>
+                        </div>
+                    </div>
+                </td>
+                <td style="text-align: center;">
+                    <span class="tooth-badge-sm">${caseItem.tooth}</span>
+                </td>
+                <td style="text-align: center;">
+                    <div class="status-change">
+                        <span class="status-old">${caseItem.old_status}</span>
+                        <i class="fas fa-arrow-left status-arrow"></i>
+                        <span class="status-new">${caseItem.new_status}</span>
+                    </div>
+                </td>
+                <td style="text-align: center;">
+                    <div class="supervisor-cell">
+                        <div class="supervisor-avatar-sm" style="background: linear-gradient(135deg, ${caseItem.supervisor_color}, ${caseItem.supervisor_color}dd);">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <span class="supervisor-name-sm">${caseItem.supervisor}</span>
+                    </div>
+                </td>
+                <td style="text-align: center;">
+                    <div class="date-cell">${caseItem.date}<br>${caseItem.time}</div>
+                </td>
+                <td style="text-align: center;">
+                    <span class="request-code-sm">${caseItem.request_code}</span>
+                </td>
+                <td style="text-align: center;">
+                    ${caseItem.confirmed 
+                        ? `<button type="button" class="btn-confirm-sm" disabled><i class="fas fa-check"></i> تم</button>`
+                        : `<button type="button" class="btn-confirm-sm" data-confirm-case="${caseItem.id}"><i class="fas fa-check"></i> تأكيد</button>`
+                    }
+                </td>
+            </tr>
+        `).join('');
+        document.getElementById('rejected-tbody').innerHTML = html;
+        
+        // إضافة event listeners لأزرار التأكيد
+        document.querySelectorAll('[data-confirm-case]').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const caseId = this.getAttribute('data-confirm-case');
+                confirmRejectedCase(caseId);
+            });
+        });
+        
+    } else if (section === 'radiology') {
+        html = dataToRender.map(req => {
+            let actionButtons = '';
+            let cancelledInfo = '';
+            
+            if (req.cancelled) {
+                cancelledInfo = `
+                    <div class="cancelled-info">
+                        <div><strong>ملغى:</strong> ${req.cancel_date} ${req.cancel_time}</div>
+                        <div class="cancelled-reason">السبب: ${req.cancel_reason}</div>
+                    </div>
+                `;
+                actionButtons = `
+                    <button type="button" class="btn-disabled-action" disabled>
+                        <i class="fas fa-ban"></i> ملغى
+                    </button>
+                `;
+            } else if (req.status === 'معلق') {
+                actionButtons = `
+                    <button type="button" class="btn-cancel-action" data-cancel-request="${req.id}">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                `;
+            } else {
+                actionButtons = `
+                    <button type="button" class="btn-disabled-action" disabled>
+                        <i class="fas fa-lock"></i> لا يمكن الإلغاء
+                    </button>
+                `;
+            }
+            
+            return `
+            <tr>
+                <td>
+                    <div class="patient-name-cell">${req.patient}</div>
+                    <div class="patient-record">${req.record}</div>
+                    ${cancelledInfo}
+                </td>
+                <td style="text-align: center;">
+                    <div class="request-reason" title="${req.reason}">${req.reason}</div>
+                </td>
+                <td style="text-align: center;">
+                    <div class="date-cell">${req.date}<br>${req.time}</div>
+                </td>
+                <td style="text-align: center;">
+                    <span class="status-pill ${req.statusClass}">${req.status}</span>
+                </td>
+                <td style="text-align: center;">
+                    <div class="action-btns-cell">
+                        ${actionButtons}
+                    </div>
+                </td>
+            </tr>
+        `}).join('');
+        document.getElementById('radiology-tbody').innerHTML = html;
+        
+        // إضافة event listeners لأزرار الإلغاء
+        document.querySelectorAll('[data-cancel-request]').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const requestId = parseInt(this.getAttribute('data-cancel-request'));
+                cancelRadiologyRequest(requestId);
+            });
+        });
+    }
+    
+    let infoText;
+    if (section === 'radiology' && config.filteredData) {
+        infoText = `تم العثور على ${config.filteredData.length} نتيجة`;
+    } else {
+        const start = (config.currentPage - 1) * config.perPage;
+        const end = Math.min(start + config.perPage, config.total);
+        infoText = config.total === 0 ? 'لا توجد بيانات' : `عرض ${start + 1}-${end} من ${config.total}`;
+    }
+    document.getElementById(`${section}-pagination-info`).textContent = infoText;
+    
+    updatePaginationButtons(section);
+}
+
+function getSectionData(section) {
+    switch(section) {
+        case 'courses': return allCourses;
+        case 'rejected': return allRejectedCases;
+        case 'radiology': return allRadiologyRequests;
+        default: return [];
+    }
+}
+
+function updatePaginationButtons(section) {
+    const config = paginationConfig[section];
+    const btnPrev = document.getElementById(`${section}-prev`);
+    const btnNext = document.getElementById(`${section}-next`);
+    
+    if (section === 'radiology' && config.filteredData) {
+        btnPrev.disabled = true;
+        btnPrev.classList.remove('primary');
+        btnNext.disabled = true;
+        btnNext.classList.remove('primary');
+        return;
+    }
+    
+    if (config.currentPage <= 1) {
+        btnPrev.disabled = true;
+        btnPrev.classList.remove('primary');
+    } else {
+        btnPrev.disabled = false;
+        btnPrev.classList.add('primary');
+    }
+    
+    const totalPages = Math.ceil(config.total / config.perPage);
+    if (config.currentPage >= totalPages) {
+        btnNext.disabled = true;
+        btnNext.classList.remove('primary');
+    } else {
+        btnNext.disabled = false;
+        btnNext.classList.add('primary');
+    }
+}
+
+function changePage(section, direction) {
+    const config = paginationConfig[section];
+    const totalPages = Math.ceil(config.total / config.perPage);
+    
+    if (direction === 'next' && config.currentPage < totalPages) {
+        config.currentPage++;
+    } else if (direction === 'prev' && config.currentPage > 1) {
+        config.currentPage--;
+    } else {
+        return;
+    }
+    
+    renderTable(section);
+}
+
+// ==========================================
+// إلغاء طلب الأشعة
+// ==========================================
+function cancelRadiologyRequest(requestId) {
+    const request = allRadiologyRequests.find(r => r.id === requestId);
+    if (!request) {
+        showNotification('لم يتم العثور على الطلب', 'error');
+        return;
+    }
+    
+    if (request.status !== 'معلق') {
+        showNotification('لا يمكن إلغاء الطلب إلا إذا كان معلقاً', 'warning');
+        return;
+    }
+    
+    showConfirmModal(
+        'إلغاء طلب الأشعة',
+        `
+        <div class="modal-info-box" style="background: rgba(239, 68, 68, 0.05); border-right: 3px solid var(--danger);">
+            <div class="modal-info-row">
+                <span class="modal-info-label">المريض:</span>
+                <span class="modal-info-value">${request.patient}</span>
+            </div>
+            <div class="modal-info-row">
+                <span class="modal-info-label">السبب:</span>
+                <span class="modal-info-value">${request.reason}</span>
+            </div>
+            <div class="modal-info-row">
+                <span class="modal-info-label">التاريخ:</span>
+                <span class="modal-info-value">${request.date} ${request.time}</span>
+            </div>
+        </div>
+        <div style="margin-bottom: var(--space-md);">
+            <label style="display: block; font-size: var(--text-sm); font-weight: 600; color: var(--dark); margin-bottom: var(--space-sm);">
+                سبب الإلغاء <span style="color: var(--danger);">*</span>
+            </label>
+            <textarea id="cancel-reason-input" class="form-textarea" placeholder="أدخل سبب إلغاء الطلب..." style="min-height: 80px; border-color: var(--danger);"></textarea>
+        </div>
+        `,
+        () => {
+            const cancelReason = document.getElementById('cancel-reason-input').value;
+            if (!cancelReason || cancelReason.trim() === '') {
+                showNotification('يرجى إدخال سبب الإلغاء', 'warning');
+                return false;
+            }
+            executeCancellation(requestId, cancelReason);
+        },
+        'تأكيد الإلغاء',
+        'danger'
+    );
+}
+
+function executeCancellation(requestId, cancelReason) {
+    const request = allRadiologyRequests.find(r => r.id === requestId);
+    if (!request) return;
+    
+    const now = new Date();
+    request.cancelled = true;
+    request.cancel_reason = cancelReason;
+    request.status = 'ملغى';
+    request.statusClass = 'status-cancelled';
+    request.cancel_date = now.toLocaleDateString('ar-SA');
+    request.cancel_time = now.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+    
+    const serverData = {
+        request_id: request.id,
+        patient_record: request.record,
+        action: 'cancel_radiology',
+        cancelled_by: 'المستخدم الحالي',
+        cancel_date: request.cancel_date,
+        cancel_time: request.cancel_time,
+        cancel_reason: cancelReason,
+        supervisor: request.supervisor,
+        timestamp: new Date().toISOString()
+    };
+    
+    console.log('إرسال إلغاء للسيرفر:', serverData);
+    
+    renderTable('radiology');
+    updateCounts();
+    
+    showNotification('تم إلغاء الطلب وحفظ السبب في السجل', 'success');
+}
+
+// ==========================================
+// تأكيد حالة مرفوضة
+// ==========================================
+function confirmRejectedCase(caseId) {
+    const caseItem = allRejectedCases.find(c => c.id === caseId);
+    if (!caseItem) {
+        showNotification('لم يتم العثور على الحالة', 'error');
+        return;
+    }
+    if (caseItem.confirmed) {
+        showNotification('هذه الحالة مؤكدة مسبقاً', 'info');
+        return;
+    }
+    
+    showConfirmModal(
+        'تأكيد تعديل الحالة',
+        `
+        <div class="modal-info-box">
+            <div class="modal-info-row">
+                <span class="modal-info-label">المريض:</span>
+                <span class="modal-info-value">${caseItem.name}</span>
+            </div>
+            <div class="modal-info-row">
+                <span class="modal-info-label">التغيير:</span>
+                <span class="modal-info-value">${caseItem.old_status} → ${caseItem.new_status}</span>
+            </div>
+            <div class="modal-info-row">
+                <span class="modal-info-label">المشرف:</span>
+                <span class="modal-info-value">${caseItem.supervisor}</span>
+            </div>
+            <div class="modal-info-row">
+                <span class="modal-info-label">رمز الطلب:</span>
+                <span class="modal-info-value">${caseItem.request_code}</span>
+            </div>
+        </div>
+        <p style="color: var(--gray); font-size: var(--text-sm);">هل تريد تأكيد هذا التعديل؟</p>
+        `,
+        () => {
+            executeRejectedConfirmation(caseId);
+        },
+        'تأكيد',
+        'primary'
+    );
+}
+
+function executeRejectedConfirmation(caseId) {
+    const caseItem = allRejectedCases.find(c => c.id === caseId);
+    if (!caseItem) return;
+    
+    const now = new Date();
+    caseItem.confirmed = true;
+    
+    const serverData = {
+        case_id: caseItem.id,
+        patient_name: caseItem.name,
+        tooth: caseItem.tooth,
+        old_status: caseItem.old_status,
+        new_status: caseItem.new_status,
+        supervisor: caseItem.supervisor,
+        request_code: caseItem.request_code,
+        confirmed_by: 'المستخدم الحالي',
+        confirmation_date: now.toLocaleDateString('ar-SA'),
+        confirmation_time: now.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' }),
+        timestamp: new Date().toISOString()
+    };
+    
+    console.log('إرسال تعديل للسيرفر:', serverData);
+    
+    renderTable('rejected');
+    updateCounts();
+    showNotification('تم تأكيد التعديل وحفظه في السجل', 'success');
+}
+
+// ==========================================
+// نظام المودال - تصحيح كامل باستخدام addEventListener
+// ==========================================
+let currentModalCallback = null;
+let modalOpen = false;
+let modalClosing = false;
+
+function showConfirmModal(title, content, onConfirm, confirmText = 'تأكيد', confirmType = 'primary') {
+    if (modalClosing) {
+        setTimeout(() => showConfirmModal(title, content, onConfirm, confirmText, confirmType), 350);
+        return;
+    }
+    
+    forceCloseModal();
+    
+    const overlay = document.getElementById('modal-overlay');
+    const modalContent = document.getElementById('modal-content');
+    
+    if (!overlay || !modalContent) {
+        console.error('Modal elements not found!');
+        return;
+    }
+    
+    currentModalCallback = onConfirm;
+    modalOpen = true;
+    modalClosing = false;
+    
+    const confirmBtnClass = confirmType === 'danger' ? 'modal-btn-danger' : (confirmType === 'success' ? 'modal-btn-success' : 'modal-btn-primary');
+    
+    modalContent.innerHTML = `
+        <div class="modal-header">
+            <h3 class="modal-title">${title}</h3>
+            <button type="button" class="modal-close" id="modal-close-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            ${content}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="modal-btn modal-btn-secondary" id="modal-cancel-btn">
+                <i class="fas fa-times"></i> إلغاء
+            </button>
+            <button type="button" class="modal-btn ${confirmBtnClass}" id="modal-confirm-btn">
+                <i class="fas fa-check"></i> ${confirmText}
+            </button>
+        </div>
+    `;
+    
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // ربط الأحداث باستخدام addEventListener
+    setTimeout(() => {
+        bindModalEvents();
+    }, 50);
+}
+
+function bindModalEvents() {
+    const closeBtn = document.getElementById('modal-close-btn');
+    const cancelBtn = document.getElementById('modal-cancel-btn');
+    const confirmBtn = document.getElementById('modal-confirm-btn');
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            forceCloseModal();
+        });
+    }
+    
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            forceCloseModal();
+        });
+    }
+    
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (currentModalCallback) {
+                const result = currentModalCallback();
+                if (result !== false) {
+                    forceCloseModal();
+                }
+            } else {
+                forceCloseModal();
+            }
+        });
+    }
+}
+
+function showSuccessModal(title, content, onClose) {
+    if (modalClosing) {
+        setTimeout(() => showSuccessModal(title, content, onClose), 350);
+        return;
+    }
+    
+    forceCloseModal();
+    
+    const overlay = document.getElementById('modal-overlay');
+    const modalContent = document.getElementById('modal-content');
+    
+    if (!overlay || !modalContent) return;
+    
+    modalOpen = true;
+    modalClosing = false;
+    
+    modalContent.innerHTML = `
+        <div class="modal-body" style="text-align: center; padding: var(--space-2xl);">
+            <div class="modal-success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h3 class="modal-success-title">${title}</h3>
+            <div style="margin-bottom: var(--space-lg);">
+                ${content}
+            </div>
+            <button type="button" class="modal-btn modal-btn-success" id="modal-success-btn" style="min-width: 120px;">
+                <i class="fas fa-check"></i> حسناً
+            </button>
+        </div>
+    `;
+    
+    const successBtn = document.getElementById('modal-success-btn');
+    if (successBtn) {
+        successBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            forceCloseModal();
+            if (onClose) onClose();
+        });
+    }
+    
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    forceCloseModal();
+}
+
+function forceCloseModal() {
+    const overlay = document.getElementById('modal-overlay');
+    
+    if (!overlay) return;
+    
+    modalOpen = false;
+    modalClosing = true;
+    currentModalCallback = null;
+    
+    overlay.classList.remove('active');
+    
+    setTimeout(() => {
+        document.body.style.overflow = '';
+        modalClosing = false;
+        
+        const modalContent = document.getElementById('modal-content');
+        if (modalContent) {
+            modalContent.innerHTML = '';
+        }
+    }, 300);
+}
+
+// ==========================================
+// نظام الإشعارات
+// ==========================================
+function showNotification(message, type = 'info') {
+    const container = document.getElementById('notification-container');
+    
+    const icons = {
+        success: 'fa-check-circle',
+        error: 'fa-times-circle',
+        warning: 'fa-exclamation-triangle',
+        info: 'fa-info-circle'
+    };
+    
+    const titles = {
+        success: 'نجاح',
+        error: 'خطأ',
+        warning: 'تنبيه',
+        info: 'معلومة'
+    };
+    
+    const toastId = 'toast-' + Date.now();
+    
+    const toast = document.createElement('div');
+    toast.id = toastId;
+    toast.className = `notification-toast notification-${type}`;
+    toast.innerHTML = `
+        <div class="notification-icon">
+            <i class="fas ${icons[type]}"></i>
+        </div>
+        <div class="notification-content">
+            <div class="notification-title">${titles[type]}</div>
+            <div class="notification-message">${message}</div>
+        </div>
+        <button type="button" class="notification-close" data-close-notification="${toastId}">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="notification-progress"></div>
+    `;
+    
+    container.appendChild(toast);
+    
+    // إضافة event listener لزر الإغلاق
+    toast.querySelector('[data-close-notification]').addEventListener('click', function() {
+        removeNotification(toastId);
+    });
+    
+    setTimeout(() => {
+        removeNotification(toastId);
+    }, 4000);
+}
+
+function removeNotification(toastId) {
+    const toast = document.getElementById(toastId);
+    if (toast) {
+        toast.classList.add('hiding');
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.remove();
+            }
+        }, 300);
+    }
+}
+
+// ==========================================
+// دوال المساعدة
+// ==========================================
+function updateCounts() {
+    const activeRequests = allRadiologyRequests.filter(r => r.status === 'معلق' || r.status === 'قيد التنفيذ').length;
+    const radiologyCount = document.getElementById('radiology-count');
+    const rejectedCount = document.getElementById('rejected-count');
+    
+    if (radiologyCount) radiologyCount.textContent = activeRequests + ' طلبات نشطة';
+    if (rejectedCount) rejectedCount.textContent = allRejectedCases.filter(c => !c.confirmed).length + ' حالات';
+}
+
+function showStatDetail(title, value) {
+    showConfirmModal(
+        title,
+        `<div style="text-align: center; padding: var(--space-xl);">
+            <div style="font-size: clamp(3rem, 10vw, 4rem); font-weight: 700; color: var(--primary); margin-bottom: var(--space-md);">${value}</div>
+            <p style="color: var(--gray); font-size: var(--text-base);">إجمالي ${title}</p>
+        </div>`,
+        () => {},
+        'إغلاق',
+        'secondary'
+    );
+}
+
+function viewCourse(courseId) {
+    // لا يحدث شيء عند النقر
+}
+
+function searchRejected() {
+    const val = document.getElementById('rejected-search').value;
+    if (!val) {
+        showNotification('أدخل نص للبحث', 'warning');
+        return;
+    }
+    showNotification(`جاري البحث عن: ${val}`, 'info');
+}
+
+// ==========================================
+// INIT - ربط جميع الأحداث عند تحميل الصفحة
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. التعامل مع شريط التمرير للإحصائيات
+    const scrollContainer = document.querySelector('.scroll-container');
+    const progressBar = document.getElementById('stats-progress');
+    
+    if (scrollContainer && progressBar) {
+        scrollContainer.addEventListener('scroll', () => {
+            const max = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+            const current = scrollContainer.scrollLeft;
+            progressBar.style.width = max > 0 ? (current / max * 100) + '%' : '0%';
+        });
+    }
+    
+    // 2. ربط أحداث تبديل الأقسام (Toggle Sections) - مع stopPropagation للأزرار الداخلية
+    document.querySelectorAll('.section-header-bar').forEach(bar => {
+        bar.addEventListener('click', function(e) {
+            // التحقق إذا كان النقر على زر داخلي
+            if (e.target.closest('[data-action="toggle-section"]') || 
+                e.target.closest('.section-toggle-btn') ||
+                e.target.closest('.section-controls')) {
+                return;
+            }
+            
+            const target = this.getAttribute('data-toggle');
+            if (target) {
+                toggleSection(target);
+            }
+        });
+    });
+    
+    // أزرار تبديل الأقسام (التي لها data-action)
+    document.querySelectorAll('[data-action="toggle-section"]').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation(); // منع انتشار الحدث
+            const target = this.getAttribute('data-target');
+            if (target) {
+                toggleSection(target);
+            }
+        });
+    });
+    
+    // 3. ربط أزرار Pagination
+    document.querySelectorAll('[data-page]').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const page = this.getAttribute('data-page');
+            const direction = this.getAttribute('data-direction');
+            if (page && direction) {
+                changePage(page, direction);
+            }
+        });
+    });
+    
+    // 4. ربط بطاقات الإحصائيات
+    document.querySelectorAll('.stat-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const label = this.getAttribute('data-stat-label');
+            const value = this.getAttribute('data-stat-value');
+            if (label && value) {
+                showStatDetail(label, value);
+            }
+        });
+    });
+    
+    // 5. البحث الذكي - المرضى
+    const patientInput = document.getElementById('patient-input');
+    if (patientInput) {
+        patientInput.addEventListener('input', function() {
+            searchPatients(this.value);
+        });
+        
+        patientInput.addEventListener('keydown', function(e) {
+            navigateResults(e, 'patient');
+        });
+        
+        patientInput.addEventListener('blur', function() {
+            hideDropdownDelayed('patient');
+        });
+    }
+    
+    // 6. زر إزالة المريض المختار
+    const clearPatientBtn = document.querySelector('[data-action="clear-patient"]');
+    if (clearPatientBtn) {
+        clearPatientBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            clearPatient();
+        });
+    }
+    
+    // 7. Select مخصص - سبب الطلب
+    const selectTrigger = document.querySelector('[data-action="toggle-select"]');
+    if (selectTrigger) {
+        selectTrigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const target = this.getAttribute('data-target');
+            if (target) {
+                toggleSelect(target);
+            }
+        });
+    }
+    
+    // خيارات Select
+    document.querySelectorAll('.select-option').forEach(option => {
+        option.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const reason = this.getAttribute('data-reason');
+            const text = this.getAttribute('data-text');
+            if (reason && text) {
+                selectReason(reason, text);
+            }
+        });
+    });
+    
+    // إغلاق Select عند النقر خارجها
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.custom-select')) {
+            document.querySelectorAll('.custom-select').forEach(s => s.classList.remove('active'));
+        }
+    });
+    
+    // 8. أزرار النموذج (إرسال ومسح)
+    const submitBtn = document.querySelector('[data-action="submit-form"]');
+    if (submitBtn) {
+        submitBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            submitForm();
+        });
+    }
+    
+    const clearFormBtn = document.querySelector('[data-action="clear-form"]');
+    if (clearFormBtn) {
+        clearFormBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            clearForm();
+        });
+    }
+    
+    // 9. البحث في طلبات الأشعة
+    const radiologySearchInput = document.getElementById('radiology-search-input');
+    if (radiologySearchInput) {
+        radiologySearchInput.addEventListener('input', function() {
+            searchRadiologyRequests(this.value);
+        });
+        
+        radiologySearchInput.addEventListener('keydown', function(e) {
+            navigateRadiologySearch(e);
+        });
+        
+        radiologySearchInput.addEventListener('blur', function() {
+            hideRadiologySearchDelayed();
+        });
+    }
+    
+    // 10. زر البحث في الحالات المرفوضة
+    const searchRejectedBtn = document.querySelector('[data-action="search-rejected"]');
+    if (searchRejectedBtn) {
+        searchRejectedBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            searchRejected();
+        });
+    }
+    
+    // 11. إغلاق المودال بالنقر خارج المحتوى
+    const modalOverlay = document.getElementById('modal-overlay');
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === this) {
+                forceCloseModal();
+            }
+        });
+    }
+    
+    // 12. إغلاق المودال بزر Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            forceCloseModal();
+        }
+    });
+    
+    // تهيئة الجداول
+    renderTable('courses');
+    renderTable('rejected');
+    renderTable('radiology');
+    updateCounts();
+});
+
+</script>
+
+@endsection
+

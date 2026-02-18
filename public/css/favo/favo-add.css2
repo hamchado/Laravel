@@ -1,0 +1,1429 @@
+/* ====== قسم إضافة مريض ====== */
+#favo-add-section {
+    display: block;
+    width: 100%;
+}
+
+/* ====== العناوين ====== */
+.section-title {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: clamp(16px, 4vw, 18px);
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.section-title i {
+    color: var(--primary, #4f46e5);
+}
+
+/* ====== الحاويات الرئيسية ====== */
+.input-container {
+    margin-top: 16px;
+    width: 100%;
+}
+
+/* ====== مجموعات النماذج ====== */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-size: clamp(13px, 3vw, 14px);
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 8px;
+}
+
+.form-group label i {
+    margin-left: 6px;
+}
+
+/* ====== حقول الإدخال ====== */
+.text-input {
+    width: 100%;
+    padding: clamp(10px, 3vw, 12px) clamp(12px, 3vw, 16px);
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: clamp(13px, 3vw, 14px);
+    font-family: inherit;
+    background: white;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.text-input:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* ====== الأقسام الملونة ====== */
+.info-section {
+    background: rgba(79, 70, 229, 0.05);
+    padding: clamp(16px, 4vw, 20px);
+    border-radius: 16px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(79, 70, 229, 0.1);
+}
+
+.info-section-header {
+    font-size: clamp(14px, 3.5vw, 16px);
+    font-weight: 700;
+    color: #4f46e5;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.health-section {
+    background: rgba(239, 68, 68, 0.05);
+    padding: clamp(16px, 4vw, 20px);
+    border-radius: 16px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(239, 68, 68, 0.1);
+}
+
+.health-section-header {
+    font-size: clamp(14px, 3.5vw, 16px);
+    font-weight: 700;
+    color: #dc2626;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.access-section {
+    background: rgba(219, 39, 119, 0.05);
+    padding: clamp(16px, 4vw, 20px);
+    border-radius: 16px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(219, 39, 119, 0.1);
+}
+
+.access-section-header {
+    font-size: clamp(14px, 3.5vw, 16px);
+    font-weight: 700;
+    color: #db2777;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ====== تصنيف العمر (طفل/بالغ) ====== */
+.age-type-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.age-type-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: clamp(12px, 3vw, 16px);
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: white;
+}
+
+.age-type-option.selected {
+    border-color: #4f46e5;
+    background: rgba(79, 70, 229, 0.05);
+}
+
+.age-type-option input[type="radio"] {
+    display: none;
+}
+
+.age-type-option i {
+    font-size: 24px;
+    color: #9ca3af;
+    transition: all 0.3s;
+}
+
+.age-type-option.selected i {
+    color: #4f46e5;
+}
+
+.age-type-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.age-type-title {
+    font-weight: 700;
+    color: #374151;
+    font-size: clamp(14px, 3vw, 15px);
+}
+
+.age-type-desc {
+    font-size: clamp(11px, 2.5vw, 12px);
+    color: #6b7280;
+    margin-top: 2px;
+}
+
+/* ====== قسم معلومات ولي الأمر ====== */
+.parent-info-section {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.05));
+    border: 2px solid rgba(245, 158, 11, 0.3);
+    border-radius: 16px;
+    padding: clamp(16px, 4vw, 20px);
+    margin-bottom: 20px;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.parent-section-header {
+    font-size: clamp(14px, 3.5vw, 16px);
+    font-weight: 700;
+    color: #d97706;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ====== سنة الميلاد والعمر ====== */
+.age-input-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.age-display {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: white;
+    padding: clamp(10px, 3vw, 12px) clamp(16px, 4vw, 20px);
+    border-radius: 10px;
+    font-size: clamp(13px, 3vw, 14px);
+    font-weight: 700;
+    min-width: 80px;
+    text-align: center;
+    display: none;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.age-display.visible {
+    display: block;
+    animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* ====== خيارات الجنس ====== */
+.gender-options {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.gender-option {
+    flex: 1;
+    min-width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: clamp(10px, 3vw, 12px) clamp(16px, 4vw, 20px);
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+    background: white;
+}
+
+.gender-option.selected {
+    border-color: #4f46e5;
+    background: rgba(79, 70, 229, 0.05);
+}
+
+.gender-option input[type="radio"] {
+    display: none;
+}
+
+/* ====== رقم الموبايل ====== */
+.phone-input-wrapper {
+    display: flex;
+    direction: ltr;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e5e7eb;
+}
+
+.phone-prefix {
+    background: #f3f4f6;
+    padding: clamp(10px, 3vw, 12px) clamp(12px, 3vw, 16px);
+    font-size: clamp(13px, 3vw, 14px);
+    font-weight: 700;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    border-right: 2px solid #e5e7eb;
+}
+
+.phone-input {
+    border: none;
+    flex: 1;
+    font-size: clamp(14px, 3.5vw, 16px);
+    letter-spacing: 2px;
+    direction: ltr;
+    text-align: left;
+    padding: clamp(10px, 3vw, 12px);
+    min-width: 0;
+}
+
+.phone-input:focus {
+    outline: none;
+}
+
+/* ====== Grid للمحافظة والسكن ====== */
+.location-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+/* ====== الأمراض المزمنة ====== */
+.diseases-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.health-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: clamp(12px, 2.5vw, 13px);
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.health-checkbox.selected {
+    border-color: #4f46e5;
+    background: rgba(79, 70, 229, 0.05);
+}
+
+.health-checkbox input[type="checkbox"] {
+    display: none;
+}
+
+.add-disease-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border: 2px dashed #059669;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: clamp(12px, 2.5vw, 13px);
+    background: rgba(5, 150, 105, 0.05);
+    color: #059669;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.add-disease-btn:hover {
+    background: rgba(5, 150, 105, 0.1);
+    transform: translateY(-2px);
+}
+
+.added-diseases-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+/* ====== أنماط التحكم بالأمراض ====== */
+.control-box {
+    display: none;
+    margin-bottom: 16px;
+    padding: 16px;
+    border-radius: 12px;
+}
+
+.control-box.visible {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.control-box.diabetes {
+    background: rgba(217, 119, 6, 0.1);
+    border: 1px solid rgba(217, 119, 6, 0.2);
+}
+
+.control-box.hypertension {
+    background: rgba(220, 38, 38, 0.1);
+    border: 1px solid rgba(220, 38, 38, 0.2);
+}
+
+.control-box label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.control-box.diabetes label {
+    color: #d97706;
+}
+
+.control-box.hypertension label {
+    color: #dc2626;
+}
+
+.control-options {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.control-option {
+    flex: 1;
+    min-width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: clamp(13px, 3vw, 14px);
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.control-option.selected-yes {
+    border-color: #059669;
+    background: rgba(5, 150, 105, 0.1);
+    color: #059669;
+}
+
+.control-option.selected-no {
+    border-color: #dc2626;
+    background: rgba(220, 38, 38, 0.1);
+    color: #dc2626;
+}
+
+.control-option input[type="radio"] {
+    display: none;
+}
+
+/* ====== مخطط الأسنان FDI ====== */
+.dental-chart-container {
+    margin-bottom: 20px;
+    background: white;
+    border-radius: 16px;
+    padding: clamp(16px, 4vw, 20px);
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.dental-chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.dental-chart-title {
+    font-size: clamp(16px, 4vw, 18px);
+    font-weight: 800;
+    color: #1f2937;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dental-chart-title i {
+    color: #059669;
+}
+
+.dental-chart-legend {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: clamp(11px, 2.5vw, 12px);
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+}
+
+.legend-color.restorative { background: #3b82f6; }
+.legend-color.endodontic { background: #f59e0b; }
+.legend-color.extraction { background: #ef4444; }
+.legend-color.missing { background: #6b7280; }
+
+/* ====== أقواس الأسنان ====== */
+.dental-arch {
+    margin-bottom: 24px;
+}
+
+.dental-arch:last-child {
+    margin-bottom: 0;
+}
+
+.arch-label {
+    text-align: center;
+    font-size: clamp(13px, 3vw, 14px);
+    font-weight: 700;
+    color: #6b7280;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.primary-label {
+    color: #f59e0b;
+}
+
+.teeth-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    overflow-x: auto;
+    padding-bottom: 8px;
+}
+
+.teeth-row {
+    display: flex;
+    gap: clamp(4px, 1.5vw, 8px);
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    min-width: 100%;
+}
+
+.teeth-row.upper {
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 12px;
+}
+
+.teeth-row.lower {
+    padding-top: 4px;
+}
+
+.midline {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.midline::before {
+    content: '';
+    width: 2px;
+    height: 30px;
+    background: #e5e7eb;
+    position: absolute;
+}
+
+.jaw-separator {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #cbd5e1, transparent);
+    margin: 16px 0;
+}
+
+.jaw-separator.light {
+    background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+}
+
+.empty-tooth {
+    width: clamp(32px, 8vw, 40px);
+    height: clamp(32px, 8vw, 40px);
+    visibility: hidden;
+}
+
+/* ====== أزرار الأسنان - التلوينات المصححة ====== */
+.tooth-btn {
+    width: clamp(32px, 8vw, 40px);
+    height: clamp(32px, 8vw, 40px);
+    border: 2px solid #e5e7eb;
+    background: white;
+    border-radius: 8px;
+    font-size: clamp(11px, 2.5vw, 13px);
+    font-weight: 700;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.tooth-btn:hover {
+    border-color: #4f46e5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.tooth-btn:active {
+    transform: translateY(0);
+}
+
+/* الأسنان المؤقتة */
+.tooth-btn.primary {
+    background: linear-gradient(135deg, #fef3c7, #fffbeb);
+    border-color: #fbbf24;
+    color: #d97706;
+    font-size: clamp(10px, 2.2vw, 12px);
+}
+
+.tooth-btn.primary:hover {
+    border-color: #f59e0b;
+    background: linear-gradient(135deg, #fde68a, #fef3c7);
+}
+
+/* الأسنان الدائمة */
+.tooth-btn.permanent {
+    background: white;
+    border-color: #cbd5e1;
+}
+
+/* حالات الأسنان - التلوينات الأساسية */
+.tooth-btn.restorative,
+.tooth-btn.selected-restorative {
+    background: #3b82f6 !important;
+    border-color: #2563eb !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.tooth-btn.endodontic,
+.tooth-btn.selected-endodontic {
+    background: #f59e0b !important;
+    border-color: #d97706 !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+
+.tooth-btn.extraction,
+.tooth-btn.selected-extraction {
+    background: #ef4444 !important;
+    border-color: #dc2626 !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.tooth-btn.missing,
+.tooth-btn.selected-missing {
+    background: #6b7280 !important;
+    border-color: #4b5563 !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(107, 114, 128, 0.4);
+}
+
+/* تأثير النبضة عند الاختيار */
+@keyframes toothPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.tooth-btn.restorative,
+.tooth-btn.endodontic,
+.tooth-btn.extraction,
+.tooth-btn.missing {
+    animation: toothPulse 0.3s ease;
+}
+
+/* ====== إحصائيات الأسنان ====== */
+.teeth-stats {
+    display: none;
+    margin-top: 20px;
+    padding: clamp(16px, 4vw, 20px);
+    background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(79, 70, 229, 0.1));
+    border-radius: 16px;
+    border: 1px solid rgba(5, 150, 105, 0.2);
+}
+
+.teeth-stats.visible {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+.stats-header {
+    font-size: clamp(13px, 3vw, 14px);
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 12px;
+}
+
+.stat-card {
+    text-align: center;
+    padding: clamp(12px, 3vw, 16px) clamp(8px, 2vw, 8px);
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.stat-number {
+    font-size: clamp(20px, 5vw, 24px);
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: clamp(11px, 2.5vw, 11px);
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.stat-number.fixed { color: #059669; }
+.stat-number.mobile { color: #f59e0b; }
+.stat-number.missing { color: #6b7280; }
+.stat-number.total { color: #4f46e5; }
+
+/* ====== قائمة الأسنان المحددة ====== */
+.selected-teeth-list {
+    margin-top: 20px;
+    display: none;
+}
+
+.selected-teeth-list.visible {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+.list-header {
+    font-size: clamp(13px, 3vw, 14px);
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.list-header i {
+    color: #4f46e5;
+}
+
+.teeth-list-container {
+    max-height: 200px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* ====== خيارات الوصول ====== */
+.access-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.access-option {
+    display: flex;
+    align-items: center;
+    gap: clamp(12px, 3vw, 16px);
+    padding: clamp(12px, 3vw, 16px);
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.access-option.selected {
+    border-color: #4f46e5;
+    background: rgba(79, 70, 229, 0.05);
+}
+
+.access-option input[type="radio"] {
+    display: none;
+}
+
+.access-icon {
+    width: clamp(40px, 10vw, 44px);
+    height: clamp(40px, 10vw, 44px);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.access-icon.private {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.access-icon.public {
+    background: linear-gradient(135deg, #059669, #10b981);
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
+.access-icon.custom {
+    background: linear-gradient(135deg, #d97706, #f59e0b);
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+}
+
+.access-icon i {
+    color: white;
+    font-size: clamp(18px, 4vw, 20px);
+}
+
+.access-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.access-title {
+    font-size: clamp(14px, 3.5vw, 15px);
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.access-desc {
+    font-size: clamp(11px, 2.5vw, 12px);
+    color: #6b7280;
+    margin-top: 2px;
+}
+
+.check-icon {
+    font-size: 24px;
+    color: #d1d5db;
+    flex-shrink: 0;
+}
+
+.access-option.selected .check-icon {
+    color: #4f46e5;
+}
+
+/* ====== قسم الطلاب المخصصين ====== */
+.custom-students-section {
+    display: none;
+    margin-top: 16px;
+    padding: 16px;
+    background: rgba(217, 119, 6, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(217, 119, 6, 0.2);
+}
+
+.custom-students-section.visible {
+    display: block;
+    animation: slideDown 0.3s ease;
+}
+
+.custom-students-header {
+    font-size: clamp(13px, 3vw, 14px);
+    font-weight: 700;
+    color: #d97706;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.add-student-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.add-student-btn {
+    background: linear-gradient(135deg, #d97706, #f59e0b);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.add-student-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(217, 119, 6, 0.4);
+}
+
+.students-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.no-students {
+    font-size: 12px;
+    color: #6b7280;
+    font-style: italic;
+}
+
+.student-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: white;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* ====== الملاحظات ====== */
+.notes-group {
+    margin-bottom: 24px;
+}
+
+.notes-label {
+    display: block;
+    font-size: clamp(14px, 3.5vw, 15px);
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.notes-label i {
+    color: #6b7280;
+}
+
+textarea.text-input {
+    resize: none;
+    line-height: 1.6;
+    min-height: 100px;
+}
+
+/* ====== زر الإضافة الرئيسي ====== */
+.submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: white;
+    border: none;
+    padding: clamp(14px, 4vw, 16px);
+    border-radius: 14px;
+    font-size: clamp(15px, 4vw, 16px);
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+    transition: all 0.2s;
+    margin-top: 20px;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(79, 70, 229, 0.5);
+}
+
+.submit-btn i {
+    font-size: 20px;
+}
+
+/* ====== تنبيه هام ====== */
+.important-notice {
+    margin-top: 16px;
+    padding: clamp(12px, 3vw, 16px);
+    background: rgba(217, 119, 6, 0.1);
+    border: 1px solid rgba(217, 119, 6, 0.3);
+    border-radius: 12px;
+    display: flex;
+    align-items: start;
+    gap: 12px;
+}
+
+.notice-icon {
+    width: clamp(36px, 9vw, 40px);
+    height: clamp(36px, 9vw, 40px);
+    background: linear-gradient(135deg, #d97706, #f59e0b);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.notice-icon i {
+    color: white;
+    font-size: clamp(16px, 4vw, 18px);
+}
+
+.notice-content {
+    flex: 1;
+}
+
+.notice-title {
+    font-size: clamp(13px, 3vw, 14px);
+    font-weight: 700;
+    color: #d97706;
+    margin-bottom: 4px;
+}
+
+.notice-text {
+    font-size: clamp(12px, 2.8vw, 13px);
+    color: #4b5563;
+    line-height: 1.6;
+}
+
+.notice-text strong {
+    color: #4f46e5;
+}
+
+/* ====== Modals ====== */
+.tooth-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.tooth-modal.active {
+    display: flex;
+}
+
+.tooth-modal-content {
+    background: white;
+    border-radius: 20px;
+    padding: clamp(20px, 5vw, 24px);
+    width: 100%;
+    max-width: 450px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #f3f4f6;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.modal-title {
+    font-size: clamp(16px, 4vw, 18px);
+    color: #1f2937;
+    margin: 0;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modal-title i {
+    color: #059669;
+}
+
+.tooth-number {
+    color: #4f46e5;
+    font-size: clamp(20px, 5vw, 24px);
+}
+
+.modal-subtitle {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 4px 0 0 0;
+}
+
+.close-modal-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: #f3f4f6;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.close-modal-btn:hover {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+/* ====== خيارات حالات الأسنان ====== */
+.condition-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.condition-card {
+    display: flex;
+    align-items: center;
+    gap: clamp(12px, 3vw, 16px);
+    padding: clamp(14px, 3.5vw, 16px);
+    border: 2px solid #e5e7eb;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+}
+
+.condition-card:hover {
+    border-color: #4f46e5;
+    transform: translateX(-4px);
+}
+
+.condition-card.restorative:hover { border-color: #3b82f6; background: rgba(59, 130, 246, 0.02); }
+.condition-card.endodontic:hover { border-color: #f59e0b; background: rgba(245, 158, 11, 0.02); }
+.condition-card.extraction:hover { border-color: #ef4444; background: rgba(239, 68, 68, 0.02); }
+.condition-card.missing:hover { border-color: #6b7280; background: rgba(107, 114, 128, 0.02); }
+
+.condition-icon {
+    width: clamp(44px, 11vw, 48px);
+    height: clamp(44px, 11vw, 48px);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(18px, 4.5vw, 20px);
+    flex-shrink: 0;
+}
+
+.condition-card.restorative .condition-icon { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+.condition-card.endodontic .condition-icon { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+.condition-card.extraction .condition-icon { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+.condition-card.missing .condition-icon { background: rgba(107, 114, 128, 0.1); color: #6b7280; }
+
+.condition-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.condition-info h4 {
+    font-size: clamp(14px, 3.5vw, 15px);
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 4px;
+}
+
+.condition-info p {
+    font-size: clamp(11px, 2.8vw, 12px);
+    color: #6b7280;
+    margin: 0;
+}
+
+.condition-arrow {
+    margin-right: auto;
+    color: #9ca3af;
+}
+
+.condition-card.restorative .condition-arrow { color: #3b82f6; }
+.condition-card.endodontic .condition-arrow { color: #f59e0b; }
+.condition-card.extraction .condition-arrow { color: #ef4444; }
+
+.delete-condition {
+    border-style: dashed;
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.02);
+}
+
+.delete-condition:hover {
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.delete-condition .condition-icon {
+    background: white;
+    border: 2px dashed #ef4444;
+    color: #ef4444;
+}
+
+.delete-condition h4 {
+    color: #ef4444;
+}
+
+.direct-badge {
+    background: #6b7280;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+/* ====== Modal التفاصيل الفرعية ====== */
+.sub-condition-content {
+    margin-bottom: 20px;
+}
+
+.tooth-sub-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 10px;
+    background: white;
+}
+
+.tooth-sub-option:hover {
+    border-color: #4f46e5;
+    background: rgba(79, 70, 229, 0.02);
+}
+
+.sub-check {
+    color: #e5e7eb;
+    font-size: 22px;
+    transition: all 0.2s;
+}
+
+.tooth-sub-option.selected .sub-check {
+    color: #4f46e5;
+}
+
+.confirm-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #059669, #10b981);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+    transition: all 0.2s;
+}
+
+.confirm-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(5, 150, 105, 0.4);
+}
+
+/* ====== Modal إضافة مرض ====== */
+.small-modal .tooth-modal-content {
+    max-width: 320px;
+}
+
+.modal-input-group {
+    margin-bottom: 16px;
+}
+
+/* ====== ألوان الأيقونات المختلفة ====== */
+.icon-primary { color: #4f46e5; }
+.icon-pink { color: #ec4899; }
+.icon-green { color: #059669; }
+.icon-red { color: #dc2626; }
+.icon-yellow { color: #d97706; }
+.icon-gray { color: #6b7280; }
+
+/* ====== Responsive Design ====== */
+@media (max-width: 640px) {
+    .location-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .dental-chart-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .teeth-row {
+        gap: 4px;
+    }
+    
+    .access-option {
+        padding: 12px;
+    }
+    
+    .access-icon {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .gender-options {
+        flex-direction: column;
+    }
+    
+    .gender-option {
+        min-width: auto;
+    }
+    
+    .control-options {
+        flex-direction: column;
+    }
+    
+    .dental-chart-legend {
+        gap: 8px;
+        width: 100%;
+    }
+    
+    .legend-item {
+        font-size: 11px;
+    }
+    
+    .age-type-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .age-input-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .age-display {
+        width: 100%;
+    }
+}
+
+@media (max-width: 400px) {
+    .tooth-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 10px;
+    }
+    
+    .empty-tooth {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .midline {
+        width: 10px;
+    }
+    
+    .condition-card {
+        padding: 12px;
+    }
+    
+    .condition-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+}
+
+/* ====== Scrollbar ====== */
+.teeth-list-container::-webkit-scrollbar,
+.tooth-modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.teeth-list-container::-webkit-scrollbar-track,
+.tooth-modal-content::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    border-radius: 3px;
+}
+
+.teeth-list-container::-webkit-scrollbar-thumb,
+.tooth-modal-content::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 3px;
+}
+
+.teeth-list-container::-webkit-scrollbar-thumb:hover,
+.tooth-modal-content::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+

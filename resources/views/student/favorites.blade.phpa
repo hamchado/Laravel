@@ -1,0 +1,73 @@
+@extends('layouts.app')
+
+@section('title', 'إدارة المرضى')
+@section('page_title', 'نظام إدارة المرضى')
+
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/favo/favo.css') }}">
+<link rel="stylesheet" href="{{ asset('css/favo/favo-patient.css') }}">
+
+<link rel="stylesheet" href="{{ asset('css/favo/favo.css') }}">
+<link rel="stylesheet" href="{{ asset('css/favo/favo-add.css') }}">
+
+
+@endpush
+
+@section('content')
+
+<!-- الشريط العلوي للتنقل -->
+<div class="favo-container">
+    <div class="tabs-wrapper">
+        <div class="tabs-container" id="favoTabs">
+            <button class="tab-item active" onclick="switchFavoTab(this, 'favo-add')">
+                <i class="fas fa-user-plus"></i>
+                <span>إضافة مريض جديد</span>
+            </button>
+            <button class="tab-item" onclick="switchFavoTab(this, 'favo-patients')">
+                <i class="fas fa-users"></i>
+                <span>سجل المرضى</span>
+                <span class="tab-badge" id="patientsCount">0</span>
+            </button>
+            <button class="tab-item" onclick="switchFavoTab(this, 'search')">
+                <i class="fas fa-search"></i>
+                <span>البحث عن مريض</span>
+            </button>
+            <button class="tab-item" onclick="switchFavoTab(this, 'bookings')">
+                <i class="fas fa-calendar-alt"></i>
+                <span>سجل الحجوزات</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- المحتوى -->
+    <div class="favo-content">
+        <!-- قسم إضافة مريض -->
+        <div id="favo-add-section" class="tab-content-section" style="display: block;">
+            @include('student.favo-add')
+        </div>
+
+        <!-- قسم سجل المرضى -->
+        <div id="favo-patients-section" class="tab-content-section" style="display: none;">
+            @include('student.favo-patient')
+        </div>
+
+        <!-- قسم البحث -->
+        <div id="favo-search-section" class="tab-content-section" style="display: none;">
+            @include('student.favo-search')
+        </div>
+
+        <!-- قسم الحجوزات -->
+        <div id="favo-bookings-section" class="tab-content-section" style="display: none;">
+            @include('student.favo-sjl')
+        </div>
+    </div>
+</div>
+
+@endsection
+
+@push('scripts')
+
+
+<script src="{{ asset('js/favo/favo-main.js') }}"></script>
+@endpush
+
